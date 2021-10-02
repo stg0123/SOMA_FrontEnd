@@ -1,0 +1,30 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.SpeechTeacher" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/variant</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/textprimary</item>
+        <item name="android:textColorPrimaryInverse">@color/textprimaryinverse</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- font style custom. -->
+        <item name="android:textViewStyle">@style/NotoSansTextViewStyle</item>
+        <item name="android:buttonStyle">@style/NotoSansButtonStyle</item>
+        <item name="android:editTextStyle">@style/NotoSansEditTextStyle</item>
+        <item name="android:radioButtonStyle">@style/NotoSansRadioButtonStyle</item>
+        <item name="android:checkboxStyle">@style/NotoSansCheckboxStyle</item>
+    </style>
+    <style name="Theme.SplashTheme" parent="Theme.SpeechTeacher">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <style name="Theme.SpeechTeacher.Main" parent="Theme.SpeechTeacher">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
+</resources>
