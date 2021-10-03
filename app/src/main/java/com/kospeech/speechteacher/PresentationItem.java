@@ -4,8 +4,8 @@ import android.graphics.drawable.Drawable;
 
 public class PresentationItem {
     private String title;
-    private String date;
     private int number;
+    private String date;
 
     public String getTitle() {
         return title;
