@@ -6,18 +6,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,9 +22,12 @@ public class MainActivity extends AppCompatActivity {
     private FragmentPresentation fragmentPresentation = new FragmentPresentation();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_SpeechTeacher);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
+
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragmentPresentation).commitAllowingStateLoss();

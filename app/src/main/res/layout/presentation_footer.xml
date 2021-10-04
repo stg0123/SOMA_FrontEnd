@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <Button
+        android:id="@+id/presentation_make_button"
+        android:layout_margin="10dp"
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/make_presentation_button"
+        android:drawableLeft="@drawable/add_ic"
+        android:text="새로운 발표연습 만들기"
+        android:textColor="@color/white"
+        />
+
+
+</LinearLayout>

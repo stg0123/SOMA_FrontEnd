@@ -2,10 +2,16 @@ package com.kospeech.speechteacher;
 
 
 
+import static android.content.ContentValues.TAG;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,9 +21,11 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationViewAdapter.ViewHolder> {
+public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<PresentationItem> mData= null;
-
+    private final int TYPE_HEADER = 0;
+    private final int TYPE_ITEM = 1;
+    private final int TYPE_FOOTER = 2;
     public PresentationViewAdapter(ArrayList<PresentationItem> data) {
         mData=data;
     }
@@ -25,36 +33,85 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<PresentationVi
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
+        RecyclerView.ViewHolder holder;
+        View view;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view = inflater.inflate(R.layout.presentation_item, parent, false);
-
-        return new ViewHolder(view);
+        if(viewType == TYPE_ITEM){
+            view = inflater.inflate(R.layout.presentation_item, parent, false);
+            holder= new ItemViewHolder(view);
+        }
+        else {
+            view = inflater.inflate(R.layout.presentation_footer, parent, false);
+            holder = new FooterViewHolder(view);
+        }
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PresentationItem item = mData.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        holder.titleView.setText(item.getTitle());
-        String num = Integer.toString(item.getNumber())+"회";
-        holder.numberView.setText(num);
-        holder.dateView.setText("발표일: "+item.getDate());
+        if(holder instanceof ItemViewHolder) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
+            PresentationItem item = mData.get(position);
+            itemViewHolder.titleView.setText(item.getTitle());
+            String num = Integer.toString(item.getNumber())+"회";
+            itemViewHolder.numberView.setText(num);
+            itemViewHolder.dateView.setText("발표일: "+item.getDate());
+        }
+        else{
+            FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData.size()+1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == mData.size())
+            return TYPE_FOOTER;
+        else
+            return TYPE_ITEM;
+    }
+
+    public class FooterViewHolder extends RecyclerView.ViewHolder{
+        Button presentationmakebutton;
+        public FooterViewHolder(@NonNull View view) {
+            super(view);
+
+            presentationmakebutton = view.findViewById(R.id.presentation_make_button);
+            presentationmakebutton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder ad = new AlertDialog.Builder(view.getContext());
+                    ad.setIcon(R.drawable.mini_logo);
+                    ad.setMessage("원소의 개수는 "+Integer.toString(mData.size())+"개 입니다.");
+                    ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    ad.show();
+                }
+            });
+
+
+        }
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView titleView;
         TextView numberView;
         TextView dateView;
-        public ViewHolder(View view) {
+        public ItemViewHolder(@NonNull View view) {
             super(view);
 
             titleView = view.findViewById(R.id.titleText);
