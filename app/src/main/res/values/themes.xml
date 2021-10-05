@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.SpeechTeacher" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- background color-->
+        <item name="android:background">@color/white</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/variant</item>
@@ -18,9 +20,11 @@
         <item name="android:editTextStyle">@style/NotoSansEditTextStyle</item>
         <item name="android:radioButtonStyle">@style/NotoSansRadioButtonStyle</item>
         <item name="android:checkboxStyle">@style/NotoSansCheckboxStyle</item>
+
     </style>
     <style name="Theme.SplashTheme" parent="Theme.SpeechTeacher">
         <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:background"></item>
     </style>
 
     <style name="Theme.SpeechTeacher.Main" parent="Theme.SpeechTeacher">
