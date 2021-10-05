@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -25,8 +26,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this,LoginActivity.class);
-        startActivity(intent);
+        SharedPreferences sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
+        if(sharedPreferences.getString("login_token","").equals("")) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();

@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -52,11 +54,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if(response.isSuccessful()){
+                            SharedPreferences sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
                             try {
-                                ad.setMessage(response.body().string());
+                                editor.putString("login_token",response.body().string());
+                                editor.commit();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                            Intent intent = new Intent(view.getContext(),MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
                         }
                         else {
                             try {
