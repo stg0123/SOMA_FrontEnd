@@ -17,6 +17,6 @@ public interface RetrofitService {
 
     @FormUrlEncoded
     @POST("login/")
-    Call<ResponseBody> login(@Field("user_email") String user_email,@Field("user_password") String user_password );
+    Call<LoginActivity.TokenData> login(@Field("user_email") String user_email, @Field("user_password") String user_password );
 
 }

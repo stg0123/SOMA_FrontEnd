@@ -27,11 +27,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
-        if(sharedPreferences.getString("login_token","").equals("")) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();

@@ -2,6 +2,7 @@ package com.kospeech.speechteacher;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -12,22 +13,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
-import java.io.IOException;
-import java.util.concurrent.BlockingDeque;
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
-import okhttp3.ResponseBody;
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
     EditText edit_id,edit_pw;
-    Button login_button;
-
+    Button login_button,join_button;
+    CheckBox auto_login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +37,9 @@ public class LoginActivity extends AppCompatActivity {
         edit_id = findViewById(R.id.edit_id);
         edit_pw = findViewById(R.id.edit_pw);
         login_button = findViewById(R.id.login_button);
-
-        RetrofitService retrofitService = RetrofitClient.getClient().create(RetrofitService.class);
+        auto_login = findViewById(R.id.auto_login);
+        join_button = findViewById(R.id.join_button);
+        RetrofitService retrofitService = RetrofitClient.getClient("").create(RetrofitService.class);
 
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,42 +52,66 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-                retrofitService.login(edit_id.getText().toString(),edit_pw.getText().toString()).enqueue(new Callback<ResponseBody>() {
+                retrofitService.login(edit_id.getText().toString(),edit_pw.getText().toString()).enqueue(new Callback<TokenData>() {
                     @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if(response.isSuccessful()){
+                    public void onResponse(@NonNull Call<TokenData> call, @NonNull Response<TokenData> response) {
+                        if(response.isSuccessful() && response.body()!=null){
                             SharedPreferences sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            try {
-                                editor.putString("login_token",response.body().string());
-                                editor.commit();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+
+                            TokenData data = response.body();
+                            Log.d(TAG, "onResponse: "+data.token);
+                            editor.putString("login_token",data.token);
+                            if(auto_login.isChecked()) {
+                                editor.putString("auto_login", "ok");
                             }
-                            Intent intent = new Intent(view.getContext(),MainActivity.class);
-                            startActivity(intent);
+                            editor.commit();
+                            startActivity(new Intent(view.getContext(),MainActivity.class));
                             finish();
 
                         }
                         else {
                             try {
-                                ad.setMessage(response.errorBody().string());
+                                Gson gson = new Gson();
+                                ErrorData data =  gson.fromJson(response.errorBody().string(),ErrorData.class);
+                                ad.setMessage(data.message);
+                                ad.show();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
-                        ad.show();
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    public void onFailure(Call<TokenData> call, Throwable t) {
                         Log.d(TAG, "onFailure: fail");
                     }
                 });
+            }
+        });
 
-
+        join_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(),JoinActivity.class));
             }
         });
 
     }
+    public class TokenData{
+        @SerializedName("message")
+        private String message;
+        @SerializedName("access_token")
+        private String token;
+
+        @Override
+        public String toString() {
+            return "TokenData{" +
+                    "message='" + message + '\'' +
+                    ", token='" + token + '\'' +
+                    '}';
+        }
+    }
+
+
 }

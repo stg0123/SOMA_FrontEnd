@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/sign_in_button"
+        app:layout_constraintBottom_toTopOf="@id/join_button"
         >
 
         <ImageView
@@ -88,6 +88,7 @@
                 />
         </LinearLayout>
         <CheckBox
+            android:id="@+id/auto_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="자동로그인"
@@ -132,7 +133,7 @@
         </LinearLayout>
     </LinearLayout>
     <Button
-        android:id="@+id/sign_in_button"
+        android:id="@+id/join_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="지금 회원가입하기!"
