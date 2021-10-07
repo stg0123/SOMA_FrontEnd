@@ -16,9 +16,6 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.remove("auto_login");
-        editor.commit();
-
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -107,16 +108,29 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
 
-    public static class ItemViewHolder extends RecyclerView.ViewHolder {
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView titleView;
         TextView numberView;
         TextView dateView;
         public ItemViewHolder(@NonNull View view) {
             super(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(view.getContext(), mData.get(getAdapterPosition()).getTitle(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
             titleView = view.findViewById(R.id.titleText);
             numberView = view.findViewById(R.id.numberText);
             dateView = view.findViewById(R.id.dateText);
+            
+            numberView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(view.getContext(), numberView.getText().toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
 

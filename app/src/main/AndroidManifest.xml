@@ -12,10 +12,19 @@
         android:roundIcon="@mipmap/logo_round"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".JoinActivity"
+            android:name=".MyinfoUpdateActivity"
             android:exported="true"
             android:theme="@style/Theme.SpeechTeacher"
             />
+        <activity
+            android:name=".FragmentMypage"
+            android:exported="true"
+            android:theme="@style/Theme.SpeechTeacher"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".JoinActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SpeechTeacher" />
         <activity
             android:name=".LoginActivity"
             android:exported="true"

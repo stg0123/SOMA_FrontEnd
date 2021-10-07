@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -44,49 +45,45 @@ public class LoginActivity extends AppCompatActivity {
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder ad = new AlertDialog.Builder(view.getContext());
-                ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
+                if(edit_id.getText().toString().equals(""))
+                    Toast.makeText(view.getContext(), "아이디를 입력하세요", Toast.LENGTH_SHORT).show();
+                else if(edit_pw.getText().toString().equals(""))
+                    Toast.makeText(view.getContext(), "비밀번호를 입력하세요", Toast.LENGTH_SHORT).show();
+                else {
+                    retrofitService.login(edit_id.getText().toString(), edit_pw.getText().toString()).enqueue(new Callback<TokenData>() {
+                        @Override
+                        public void onResponse(@NonNull Call<TokenData> call, @NonNull Response<TokenData> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                retrofitService.login(edit_id.getText().toString(),edit_pw.getText().toString()).enqueue(new Callback<TokenData>() {
-                    @Override
-                    public void onResponse(@NonNull Call<TokenData> call, @NonNull Response<TokenData> response) {
-                        if(response.isSuccessful() && response.body()!=null){
-                            SharedPreferences sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                TokenData data = response.body();
+                                Log.d(TAG, "onResponse: " + data.token);
+                                editor.putString("login_token", data.token);
+                                if (auto_login.isChecked()) {
+                                    editor.putString("auto_login", "ok");
+                                }
+                                editor.commit();
+                                startActivity(new Intent(view.getContext(), MainActivity.class));
+                                finish();
 
-                            TokenData data = response.body();
-                            Log.d(TAG, "onResponse: "+data.token);
-                            editor.putString("login_token",data.token);
-                            if(auto_login.isChecked()) {
-                                editor.putString("auto_login", "ok");
-                            }
-                            editor.commit();
-                            startActivity(new Intent(view.getContext(),MainActivity.class));
-                            finish();
-
-                        }
-                        else {
-                            try {
-                                Gson gson = new Gson();
-                                ErrorData data =  gson.fromJson(response.errorBody().string(),ErrorData.class);
-                                ad.setMessage(data.message);
-                                ad.show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                            } else {
+                                try {
+                                    Gson gson = new Gson();
+                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<TokenData> call, Throwable t) {
-                        Log.d(TAG, "onFailure: fail");
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<TokenData> call, Throwable t) {
+                            Log.d(TAG, "onFailure: fail");
+                        }
+                    });
+                }
             }
         });
 
