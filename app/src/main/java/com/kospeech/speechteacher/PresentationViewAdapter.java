@@ -23,11 +23,11 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<PresentationItem> mData= null;
+    private ArrayList<FragmentPresentation.PresentationItem> mData= null;
     private final int TYPE_HEADER = 0;
     private final int TYPE_ITEM = 1;
     private final int TYPE_FOOTER = 2;
-    public PresentationViewAdapter(ArrayList<PresentationItem> data) {
+    public PresentationViewAdapter(ArrayList<FragmentPresentation.PresentationItem> data) {
         mData=data;
     }
 
@@ -55,11 +55,10 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         if(holder instanceof ItemViewHolder) {
             ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-            PresentationItem item = mData.get(position);
-            itemViewHolder.titleView.setText(item.getTitle());
-            String num = Integer.toString(item.getNumber())+"회";
-            itemViewHolder.numberView.setText(num);
-            itemViewHolder.dateView.setText("발표일: "+item.getDate());
+            FragmentPresentation.PresentationItem item = mData.get(position);
+            itemViewHolder.titleView.setText(item.getPresntation_title());
+            itemViewHolder.numberView.setText(Integer.toString(item.getPresentation_result_count())+"회");
+            itemViewHolder.dateView.setText("발표일: "+item.getPresentation_date());
         }
         else{
             FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
@@ -117,7 +116,17 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(), mData.get(getAdapterPosition()).getTitle(), Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setMessage(mData.get(getAdapterPosition()).toString())
+                            .setTitle("해당 객체 정보")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
                 }
             });
 

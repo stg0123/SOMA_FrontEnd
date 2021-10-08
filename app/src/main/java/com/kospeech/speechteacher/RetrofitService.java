@@ -1,5 +1,7 @@
 package com.kospeech.speechteacher;
 
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -39,5 +41,8 @@ public interface RetrofitService {
     Call<MyinfoUpdateActivity.UpdateData> myinfoupdate(@Field("user_email") String user_email
                                                        ,@Field("user_password") String user_password
                                                        ,@Field("user_nickname") String user_nickname);
+
+    @GET("presentation/")
+    Call<List<FragmentPresentation.PresentationItem>> getpresentation();
 
 }
