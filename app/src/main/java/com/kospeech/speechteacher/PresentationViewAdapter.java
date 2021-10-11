@@ -7,6 +7,7 @@ import static android.content.ContentValues.TAG;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,17 +117,20 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    builder.setMessage(mData.get(getAdapterPosition()).toString())
-                            .setTitle("해당 객체 정보")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+//                    builder.setMessage(mData.get(getAdapterPosition()).toString())
+//                            .setTitle("해당 객체 정보")
+//                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                    dialogInterface.dismiss();
+//                                }
+//                            });
+//                    AlertDialog alert = builder.create();
+//                    alert.show();
+
+                    view.getContext().startActivity(new Intent(view.getContext(),PresentationPracticeActivity.class));
+
                 }
             });
 

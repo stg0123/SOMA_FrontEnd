@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<TokenData> call, Throwable t) {
-                            Log.d(TAG, "onFailure: fail");
+                            Log.d(TAG, "onFailure: connection fail");
                         }
                     });
                 }
