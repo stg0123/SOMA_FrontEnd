@@ -2,6 +2,7 @@ package com.kospeech.speechteacher;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -12,14 +13,11 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.AudioTrack;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +34,12 @@ import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import omrecorder.AudioChunk;
+import omrecorder.AudioRecordConfig;
+import omrecorder.OmRecorder;
+import omrecorder.PullTransport;
+import omrecorder.PullableSource;
+import omrecorder.Recorder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,14 +53,8 @@ public class PresentationPracticeActivity extends AppCompatActivity {
 
     private boolean isRecording = false;
     private int RECORD_PERMISSION_CODE = 21;
-    AudioRecord audioRecord = null;
-    private int mSampleRate = 44100;
-    private int mChannelConfig = AudioFormat.CHANNEL_IN_STEREO;
-    private int mAudioFormat = AudioFormat.ENCODING_PCM_16BIT;
-    private int mBufferSize = AudioTrack.getMinBufferSize(mSampleRate, mChannelConfig, mAudioFormat);
 
-    private MediaRecorder recorder = null;
-    private String filename;
+    private MediaRecorder mediaRecorder = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +66,8 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
 
-        File sdcard = Environment.getExternalStorageDirectory();
-        File file = new File(sdcard, "recorded.mp4");
-        filename = file.getAbsolutePath();
+        File file = new File(getExternalFilesDir(null),"record.mp3");
+
 
         practice_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,32 +77,33 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         });
 
         practice_record.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
                 if(isRecording){
                     isRecording = false;
                     practice_record.setImageDrawable(getDrawable(R.drawable.start_ic));
-                    audioRecord.stop();
+                    mediaRecorder.pause();
                 }
                 else{
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                        isRecording= true;
+                        isRecording = true;
                         practice_record.setImageDrawable(getDrawable(R.drawable.stop_ic));
-//                        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, mSampleRate, mChannelConfig, mAudioFormat, mBufferSize);
-//                        audioRecord.startRecording();
-
-                        recorder = new MediaRecorder();
-                        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-                        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-                        recorder.setOutputFile(filename);
-                        try {
-                            recorder.prepare();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if(mediaRecorder == null){
+                            mediaRecorder = new MediaRecorder();
+                            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                            mediaRecorder.setOutputFile(file.getAbsolutePath());
+                            try {
+                                mediaRecorder.prepare();
+                                mediaRecorder.start();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
-
-                        recorder.start();
+                        else
+                            mediaRecorder.resume();
                     } else {
                         ActivityCompat.requestPermissions(PresentationPracticeActivity.this , new String[]{Manifest.permission.RECORD_AUDIO}, RECORD_PERMISSION_CODE);
                     }
@@ -116,42 +114,40 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         practice_analysis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isRecording){
-                    isRecording=false;
-                    practice_record.setImageDrawable(getDrawable(R.drawable.start_ic));
-                    recorder.stop();
-                }
-                recorder.release();
-                recorder = null;
-                RequestBody requestBody = RequestBody.create(MediaType.parse("audio/*"), file );
+                if(mediaRecorder!=null) {
+                    if(isRecording) {
+                        isRecording = false;
+                        practice_record.setImageDrawable(getDrawable(R.drawable.start_ic));
+                    }
+                    mediaRecorder.stop();
+                    mediaRecorder.release();
+                    mediaRecorder = null;
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("audio/mp3"), file);
 
-                MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", "recorded.mp4", requestBody);
-                retrofitService.presentationresult(filePart).enqueue(new Callback<PresentationResult>() {
-                    @Override
-                    public void onResponse(Call<PresentationResult> call, Response<PresentationResult> response) {
-                        if(response.isSuccessful() && response.body()!=null){
-                            anlysis_text.setText(response.body().toString());
+                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", "record.mp3", requestBody);
+                    retrofitService.presentationresult(filePart).enqueue(new Callback<PresentationResult>() {
+                        @Override
+                        public void onResponse(Call<PresentationResult> call, Response<PresentationResult> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                anlysis_text.setText(response.body().toString());
 
-                        }else {
-                            try {
-                                Gson gson = new Gson();
-                                ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
-                                Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                            } else {
+                                try {
+                                    Gson gson = new Gson();
+                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
 
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<PresentationResult> call, Throwable t) {
-                        Log.d(TAG, "onFailure: connection fail");
-                    }
-                });
-
-
+                        @Override
+                        public void onFailure(Call<PresentationResult> call, Throwable t) {
+                            Log.d(TAG, "onFailure: connection fail");
+                        }
+                    });
+                }
             }
         });
 
@@ -182,15 +178,16 @@ public class PresentationPracticeActivity extends AppCompatActivity {
 
     public class PresentationResult{
         @SerializedName("duplicatedWords")
-        private List<Map<String,Integer>> duplicatedWords;
+        private Map<String,Integer> duplicatedWords;
         @SerializedName("unsuitableWords")
-        private List<Map<String,List<String>>> unsuitableWords;
+        private Map<String,List<String>> unsuitableWords;
         @SerializedName("gap")
         private List<List<Float>> gap;
-        @SerializedName("speed")
-        private List<List<Float>> speed;
         @SerializedName("tune")
         private List<Float> tune;
+        @SerializedName("speed")
+        private List<List<Float>> speed;
+
 
         @Override
         public String toString() {
@@ -198,8 +195,8 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                     "duplicatedWords=" + duplicatedWords +
                     ", unsuitableWords=" + unsuitableWords +
                     ", gap=" + gap +
-                    ", speed=" + speed +
                     ", tune=" + tune +
+                    ", speed=" + speed +
                     '}';
         }
     }
