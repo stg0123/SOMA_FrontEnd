@@ -27,11 +27,13 @@
         >
 
         <LinearLayout
+            android:id="@+id/practice_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
             >
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/practice_change_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -45,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
-                    android:src="@drawable/change_ic"
+                    android:src="@drawable/ic_change"
                     android:background="@android:color/transparent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -69,6 +71,7 @@
                         android:textStyle="bold"
                         android:textColor="@color/textprimary"/>
                     <TextView
+                        android:id="@+id/practice_change_statetext"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="현재 상태 : 둘다 보이기"
@@ -82,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
-                    android:src="@drawable/chevron_right_ic"
+                    android:src="@drawable/ic_chevron_right"
                     android:background="@android:color/transparent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -94,8 +97,10 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
+                android:id="@+id/practice_keyword_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
@@ -110,9 +115,20 @@
                     android:textStyle="bold"
                     android:textColor="@color/textprimary"
                     />
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/practice_keyword_flexbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:flexWrap="wrap"
+                    >
+
+                </com.google.android.flexbox.FlexboxLayout>
+
+
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/practice_script_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -136,7 +152,7 @@
                     android:background="@drawable/round_border_primary"
                     >
                     <TextView
-                        android:id="@+id/analysis_text"
+                        android:id="@+id/practice_script_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
@@ -169,14 +185,14 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="40dp"
             android:background="@color/white"
-            android:src="@drawable/out_ic" />
+            android:src="@drawable/ic_out" />
 
         <ImageView
             android:id="@+id/practice_analysis"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@color/white"
-            android:src="@drawable/analysis_ic"
+            android:src="@drawable/ic_analysis"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="40dp"
@@ -190,7 +206,7 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/oval_background"
         android:elevation="11dp"
-        android:src="@drawable/start_ic"
+        android:src="@drawable/ic_start"
         android:layout_marginBottom="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

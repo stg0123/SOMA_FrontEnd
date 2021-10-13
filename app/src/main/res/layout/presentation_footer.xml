@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     >
-    <Button
+
+    <TextView
         android:id="@+id/presentation_make_button"
         android:layout_margin="10dp"
-        android:padding="15dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/make_presentation_button"
-        android:drawableLeft="@drawable/add_ic"
         android:text="새로운 발표연습 만들기"
+        android:textSize="16dp"
+        android:gravity="center"
         android:textColor="@color/white"
         />
-
-
-</LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="70dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_add"
+        />
+</FrameLayout>
