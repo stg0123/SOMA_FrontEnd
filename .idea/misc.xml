@@ -12,7 +12,10 @@
         <entry key="app/src/main/res/drawable/chevron_right_ic.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_mic.xml" value="0.24635416666666668" />
+        <entry key="app/src/main/res/drawable/ic_mic_on.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/ic_pause.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_pause_ic.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/ic_start.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_start_ic.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/logo_foreground.xml" value="0.246875" />
         <entry key="app/src/main/res/drawable/logo_symbol.xml" value="0.246875" />
@@ -20,11 +23,13 @@
         <entry key="app/src/main/res/drawable/make_presentation_button.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/mini_logo.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/drawable/oval_background.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/oval_background2.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/pause_ic.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/rectangle_background.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/round_border.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/round_border_primary.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/round_select_border.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/round_select_border2.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/splash.xml" value="0.246875" />
         <entry key="app/src/main/res/drawable/splash_logo.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/splash_logo2.xml" value="0.246875" />

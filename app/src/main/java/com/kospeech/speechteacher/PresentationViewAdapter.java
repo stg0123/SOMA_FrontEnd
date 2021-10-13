@@ -81,7 +81,7 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public class FooterViewHolder extends RecyclerView.ViewHolder{
-        Button presentationmakebutton;
+        TextView presentationmakebutton;
         public FooterViewHolder(@NonNull View view) {
             super(view);
 
