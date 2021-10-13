@@ -16,4 +16,5 @@
     <color name="textprimary">#FF444444</color>
     <color name="textprimaryinverse">#FF999999</color>
     <color name="border">#FFcccccc</color>
+    <color name="backgroundprimary">#FFfafafa</color>
 </resources>

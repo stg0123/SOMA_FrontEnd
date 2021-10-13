@@ -51,6 +51,6 @@ public interface RetrofitService {
 
     @Multipart
     @POST("presentationresulttest/")
-    Call<PresentationPracticeActivity.PresentationResult> presentationresult(@Part MultipartBody.Part file);
+    Call<PresentationResult> presentationresult(@Part MultipartBody.Part file);
 
 }

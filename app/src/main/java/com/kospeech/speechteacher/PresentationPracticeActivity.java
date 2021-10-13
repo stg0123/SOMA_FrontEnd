@@ -88,7 +88,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                 else{
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                         isRecording = true;
-                        practice_record.setImageDrawable(getDrawable(R.drawable.stop_ic));
+                        practice_record.setImageDrawable(getDrawable(R.drawable.pause_ic));
                         if(mediaRecorder == null){
                             mediaRecorder = new MediaRecorder();
                             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -158,7 +158,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("뒤로 가기 시 연습 내용이 모두 사라집니다. 뒤로 가시겠습니까?")
+        builder.setMessage("뒤로 가기 시 연습 내용이 모두 사라집니다.")
                 .setTitle("연습을 중지하시겠습니까?")
                 .setPositiveButton("예", new DialogInterface.OnClickListener() {
                     @Override
@@ -174,31 +174,6 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-    }
-
-    public class PresentationResult{
-        @SerializedName("duplicatedWords")
-        private Map<String,Integer> duplicatedWords;
-        @SerializedName("unsuitableWords")
-        private Map<String,List<String>> unsuitableWords;
-        @SerializedName("gap")
-        private List<List<Float>> gap;
-        @SerializedName("tune")
-        private List<Float> tune;
-        @SerializedName("speed")
-        private List<List<Float>> speed;
-
-
-        @Override
-        public String toString() {
-            return "PresentationResult{" +
-                    "duplicatedWords=" + duplicatedWords +
-                    ", unsuitableWords=" + unsuitableWords +
-                    ", gap=" + gap +
-                    ", tune=" + tune +
-                    ", speed=" + speed +
-                    '}';
-        }
     }
 
 
