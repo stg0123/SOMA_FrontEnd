@@ -5,9 +5,11 @@ import static android.app.Activity.RESULT_OK;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -102,35 +104,51 @@ public class FragmentMypage extends Fragment {
         mypage_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                retrofitService.deleteaccount().enqueue(new Callback<DeleteAccount>() {
-                    @Override
-                    public void onResponse(Call<DeleteAccount> call, Response<DeleteAccount> response) {
-                        if(response.isSuccessful() && response.body()!=null){
-                            Toast.makeText(view.getContext(), response.body().message, Toast.LENGTH_SHORT).show();
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.clear();
-                            editor.commit();
-                            startActivity(new Intent(getActivity(),LoginActivity.class));
-                            getActivity().finish();
-                        }
-                        else{
-                            try {
-                                Gson gson = new Gson();
-                                ErrorData data = gson.fromJson(response.errorBody().string(),ErrorData.class);
-                                Toast.makeText(getContext(),"Error"+ data.message, Toast.LENGTH_SHORT).show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setMessage("회원 탈퇴 시 모든 정보가 삭제되며, 복구가 불가능합니다. \n정말 탈퇴하시겠습니까? ")
+                        .setTitle("정말 탈퇴하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                retrofitService.deleteaccount().enqueue(new Callback<DeleteAccount>() {
+                                    @Override
+                                    public void onResponse(Call<DeleteAccount> call, Response<DeleteAccount> response) {
+                                        if(response.isSuccessful() && response.body()!=null){
+                                            Toast.makeText(view.getContext(), response.body().message, Toast.LENGTH_SHORT).show();
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            editor.clear();
+                                            editor.commit();
+                                            startActivity(new Intent(getActivity(),LoginActivity.class));
+                                            getActivity().finish();
+                                        }
+                                        else{
+                                            try {
+                                                Gson gson = new Gson();
+                                                ErrorData data = gson.fromJson(response.errorBody().string(),ErrorData.class);
+                                                Toast.makeText(getContext(),"Error"+ data.message, Toast.LENGTH_SHORT).show();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<DeleteAccount> call, Throwable t) {
+                                        Toast.makeText(getContext(),"connection is failed",Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<DeleteAccount> call, Throwable t) {
-                        Toast.makeText(getContext(),"connection is failed",Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        })
+                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
 
             }
         });

@@ -24,11 +24,11 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<FragmentPresentation.PresentationItem> mData= null;
+    private ArrayList<PresentationItem> mData= null;
     private final int TYPE_HEADER = 0;
     private final int TYPE_ITEM = 1;
     private final int TYPE_FOOTER = 2;
-    public PresentationViewAdapter(ArrayList<FragmentPresentation.PresentationItem> data) {
+    public PresentationViewAdapter(ArrayList<PresentationItem> data) {
         mData=data;
     }
 
@@ -56,7 +56,7 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         if(holder instanceof ItemViewHolder) {
             ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-            FragmentPresentation.PresentationItem item = mData.get(position);
+            PresentationItem item = mData.get(position);
             itemViewHolder.titleView.setText(item.getPresntation_title());
             itemViewHolder.numberView.setText(Integer.toString(item.getPresentation_result_count())+"회");
             itemViewHolder.dateView.setText("발표일: "+item.getPresentation_date());

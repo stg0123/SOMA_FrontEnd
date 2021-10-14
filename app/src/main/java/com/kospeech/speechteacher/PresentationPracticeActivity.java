@@ -51,7 +51,8 @@ public class PresentationPracticeActivity extends AppCompatActivity {
 
     private boolean isRecording = false;
     private int RECORD_PERMISSION_CODE = 21;
-
+    private File file;
+    private RetrofitService retrofitService;
     private MediaRecorder mediaRecorder = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +63,9 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         practice_analysis = findViewById(R.id.practice_analysis);
         practice_script_text = findViewById(R.id.practice_script_text);
         SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
+        retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
 
-        File file = new File(getExternalFilesDir(null),"record.mp3");
+        file = new File(getExternalFilesDir(null),"record.mp3");
 
         practice_keyword_flexbox = findViewById(R.id.practice_keyword_flexbox);
         String str[] = {"발표","어플리케이션","개인화","아이스크림","강아지"};
@@ -159,40 +160,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         practice_analysis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mediaRecorder!=null) {
-                    if(isRecording) {
-                        isRecording = false;
-                        practice_record.setImageDrawable(getDrawable(R.drawable.ic_start));
-                    }
-                    mediaRecorder.stop();
-                    mediaRecorder.release();
-                    mediaRecorder = null;
-                    RequestBody requestBody = RequestBody.create(MediaType.parse("audio/mp3"), file);
-
-                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", "record.mp3", requestBody);
-                    retrofitService.presentationresult(filePart).enqueue(new Callback<PresentationResult>() {
-                        @Override
-                        public void onResponse(Call<PresentationResult> call, Response<PresentationResult> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                practice_script_text.setText(response.body().toString());
-
-                            } else {
-                                try {
-                                    Gson gson = new Gson();
-                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
-                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<PresentationResult> call, Throwable t) {
-                            Log.d(TAG, "onFailure: connection fail");
-                        }
-                    });
-                }
+                startanalysis(view);
             }
         });
 
@@ -220,6 +188,64 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    public void startanalysis(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("발표연습을 종료하고 분석을 시작합니다.")
+                .setTitle("발표연습을 완료하시겠습니까?")
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(mediaRecorder!=null) {
+                            if(isRecording) {
+                                isRecording = false;
+                                practice_record.setImageDrawable(getDrawable(R.drawable.ic_start));
+                            }
+                            mediaRecorder.stop();
+                            mediaRecorder.release();
+                            mediaRecorder = null;
+                            RequestBody requestBody = RequestBody.create(MediaType.parse("audio/mp3"), file);
+
+                            MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", "record.mp3", requestBody);
+                            retrofitService.presentationresult(filePart).enqueue(new Callback<PresentationResult>() {
+                                @Override
+                                public void onResponse(Call<PresentationResult> call, Response<PresentationResult> response) {
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        practice_script_text.setText(response.body().toString());
+
+                                    } else {
+                                        try {
+                                            Gson gson = new Gson();
+                                            ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                                            Toast.makeText(view.getContext() , data.message, Toast.LENGTH_SHORT).show();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<PresentationResult> call, Throwable t) {
+                                    Log.d(TAG, "onFailure: connection fail");
+                                }
+                            });
+                        }
+                        else{
+                            Toast.makeText(view.getContext(), "아직 발표를 시작하지 않았습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
 
 
 

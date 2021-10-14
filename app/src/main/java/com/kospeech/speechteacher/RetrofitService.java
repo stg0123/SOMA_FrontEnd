@@ -47,7 +47,7 @@ public interface RetrofitService {
                                                        ,@Field("user_nickname") String user_nickname);
 
     @GET("presentation/")
-    Call<List<FragmentPresentation.PresentationItem>> getpresentation();
+    Call<List<PresentationItem>> getpresentation();
 
     @Multipart
     @POST("presentationresulttest/")
