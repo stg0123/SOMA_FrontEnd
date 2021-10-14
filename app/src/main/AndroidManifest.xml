@@ -16,7 +16,9 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".AnalysisLoadingActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.SpeechTeacher"
+            />
         <activity
             android:name=".PresentationResultListActivity"
             android:exported="true"

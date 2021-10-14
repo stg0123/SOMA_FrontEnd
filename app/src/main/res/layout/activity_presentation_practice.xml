@@ -155,9 +155,10 @@
                         android:id="@+id/practice_script_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="10dp"
                         android:background="@android:color/transparent"
                         android:textSize="16dp"
-                        android:textColor="@color/textprimary"/>
+                        android:textColor="@color/textprimaryinverse"/>
                 </ScrollView>
 
             </LinearLayout>

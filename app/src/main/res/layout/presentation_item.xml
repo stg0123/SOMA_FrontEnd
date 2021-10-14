@@ -10,7 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="15sp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="5dp"
         >
         <TextView
             android:id="@+id/titleText"
@@ -159,7 +162,9 @@
                 android:layout_height="18dp"
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_garbage"/>
+                android:src="@drawable/ic_garbage"
+                android:rotation="180"
+                />
         </LinearLayout>
 
 

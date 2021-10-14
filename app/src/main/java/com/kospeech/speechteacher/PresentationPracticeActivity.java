@@ -53,7 +53,6 @@ public class PresentationPracticeActivity extends AppCompatActivity {
     private boolean isRecording = false;
     private int RECORD_PERMISSION_CODE = 21;
     private File file;
-    private RetrofitService retrofitService;
     private MediaRecorder mediaRecorder = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +62,6 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         practice_record = findViewById(R.id.practice_record);
         practice_analysis = findViewById(R.id.practice_analysis);
         practice_script_text = findViewById(R.id.practice_script_text);
-        SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
 
         file = new File(getExternalFilesDir(null),"record.mp3");
 
@@ -83,6 +80,10 @@ public class PresentationPracticeActivity extends AppCompatActivity {
             tmp.setGravity(Gravity.CENTER);
             practice_keyword_flexbox.addView(tmp);
         }
+        practice_script_text.setText("형사피해자는 법률이 정하는 바에 의하여 당해 사건의 재판 절차에서 진술할 수 있다. 대통령은 조국의 평화적 통일을 위한 성실한 의무를 진다. 국무회의는 대통령·국무총리와15인 이상 30인 이하의 국무위원으로 구성한다.\n" +
+                "국회에 제출된 법률안 기타의 의안은 회기중에 의결되지 못한 이유로 폐기되지 아니한다.");
+
+
         practice_layout = findViewById(R.id.practice_layout);
         practice_keyword_layout = findViewById(R.id.practice_keyword_layout);
         practice_script_layout = findViewById(R.id.practice_script_layout);
@@ -139,7 +140,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                         if(mediaRecorder == null){
                             mediaRecorder = new MediaRecorder();
                             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP); // ACC MPEG_4
                             mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
                             mediaRecorder.setOutputFile(file.getAbsolutePath());
                             try {
@@ -205,33 +206,8 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                             mediaRecorder.stop();
                             mediaRecorder.release();
                             mediaRecorder = null;
+                            view.getContext().startActivity(new Intent(view.getContext(),AnalysisLoadingActivity.class));
 
-
-                            RequestBody requestBody = RequestBody.create(MediaType.parse("audio/mp3"), file);
-
-                            MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", "record.mp3", requestBody);
-                            retrofitService.presentationresult(filePart).enqueue(new Callback<PresentationResult>() {
-                                @Override
-                                public void onResponse(Call<PresentationResult> call, Response<PresentationResult> response) {
-                                    if (response.isSuccessful() && response.body() != null) {
-                                        practice_script_text.setText(response.body().toString());
-
-                                    } else {
-                                        try {
-                                            Gson gson = new Gson();
-                                            ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
-                                            Toast.makeText(view.getContext() , data.message, Toast.LENGTH_SHORT).show();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<PresentationResult> call, Throwable t) {
-                                    Log.d(TAG, "onFailure: connection fail");
-                                }
-                            });
                         }
                         else{
                             Toast.makeText(view.getContext(), "아직 발표를 시작하지 않았습니다.", Toast.LENGTH_SHORT).show();

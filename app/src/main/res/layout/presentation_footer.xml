@@ -8,7 +8,7 @@
         android:id="@+id/presentation_make_button"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:background="@drawable/make_presentation_button"
         android:text="새로운 발표연습 만들기"
         android:textSize="16dp"
@@ -17,7 +17,7 @@
         />
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="70dp"
         android:background="@android:color/transparent"
