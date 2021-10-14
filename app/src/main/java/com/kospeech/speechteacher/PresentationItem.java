@@ -2,7 +2,9 @@ package com.kospeech.speechteacher;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PresentationItem{
+import java.io.Serializable;
+
+public class PresentationItem implements Serializable {
     @SerializedName("presentation_id")
     private int presentation_id;
     @SerializedName("user_id")

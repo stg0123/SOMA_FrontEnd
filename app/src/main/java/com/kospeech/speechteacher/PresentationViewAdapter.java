@@ -128,8 +128,9 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 //                            });
 //                    AlertDialog alert = builder.create();
 //                    alert.show();
-
-                    view.getContext().startActivity(new Intent(view.getContext(),PresentationPracticeActivity.class));
+                    Intent intent = new Intent(view.getContext(),PresentationResultListActivity.class);
+                    intent.putExtra("presentationItem",mData.get(getAdapterPosition()));
+                    view.getContext().startActivity(intent);
 
                 }
             });

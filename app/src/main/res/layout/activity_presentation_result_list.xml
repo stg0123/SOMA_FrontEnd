@@ -16,6 +16,7 @@
         app:layout_constraintRight_toRightOf="parent"
         >
         <TextView
+            android:id="@+id/resultlist_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="기초 발표 연습"
@@ -27,6 +28,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
         <ImageButton
+            android:id="@+id/resultlist_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
