@@ -37,17 +37,18 @@ public class AnalysisLoadingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_analysis_loading);
         analysis_text = findViewById(R.id.analysis_text);
         analysis_loading = findViewById(R.id.analysis_loading);
-        file = new File(getExternalFilesDir(null),"record.mp3");
+        file = new File(getExternalFilesDir(null),"record.m4a");
         SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
 
 
-        RequestBody requestBody = RequestBody.create(MediaType.parse("audio/mp3"), file);
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", "record.mp3", requestBody);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("audio/m4a"), file);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", "record.m4a", requestBody);
         retrofitService.presentationresult(filePart).enqueue(new Callback<PresentationResult>() {
             @Override
             public void onResponse(Call<PresentationResult> call, Response<PresentationResult> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    Log.d(TAG, "onResponse: "+response.body().toString());
                     analysis_text.setText(response.body().toString());
                 } else {
                     try {

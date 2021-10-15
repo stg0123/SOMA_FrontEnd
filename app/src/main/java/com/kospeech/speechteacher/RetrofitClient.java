@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -24,6 +25,10 @@ public class RetrofitClient {
     }
     public static Retrofit getClient(String token){
         OkHttpClient.Builder clientbuilder = new OkHttpClient.Builder();
+        clientbuilder.connectTimeout(5, TimeUnit.MINUTES);
+        clientbuilder.readTimeout(5,TimeUnit.MINUTES);
+        clientbuilder.writeTimeout(1,TimeUnit.MINUTES);
+
         clientbuilder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {

@@ -63,7 +63,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         practice_analysis = findViewById(R.id.practice_analysis);
         practice_script_text = findViewById(R.id.practice_script_text);
 
-        file = new File(getExternalFilesDir(null),"record.mp3");
+        file = new File(getExternalFilesDir(null),"record.m4a");
 
         practice_keyword_flexbox = findViewById(R.id.practice_keyword_flexbox);
         String str[] = {"발표","어플리케이션","개인화","아이스크림","강아지"};
@@ -140,8 +140,10 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                         if(mediaRecorder == null){
                             mediaRecorder = new MediaRecorder();
                             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP); // ACC MPEG_4
-                            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4); // ACC MPEG_4
+                            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                            mediaRecorder.setAudioSamplingRate(44100);
+                            mediaRecorder.setAudioEncodingBitRate(99600);
                             mediaRecorder.setOutputFile(file.getAbsolutePath());
                             try {
                                 mediaRecorder.prepare();
