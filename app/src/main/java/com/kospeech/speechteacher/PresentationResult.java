@@ -2,10 +2,11 @@ package com.kospeech.speechteacher;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class PresentationResult{
+public class PresentationResult implements Serializable {
     @SerializedName("duplicatedWords")
     private Map<String,Integer> duplicatedWords;
     @SerializedName("unsuitableWords")
