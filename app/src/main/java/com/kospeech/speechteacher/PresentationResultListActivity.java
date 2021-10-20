@@ -17,8 +17,8 @@ public class PresentationResultListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presentation_result_list);
-        Intent intent = getIntent();
-        PresentationItem presentationItem = (PresentationItem) intent.getSerializableExtra("presentationItem");
+        Intent getintent = getIntent();
+        PresentationItem presentationItem = (PresentationItem) getintent.getSerializableExtra("presentationItem");
         resultlist_title_text = findViewById(R.id.resultlist_title_text);
         resultlist_title_text.setText(presentationItem.getPresntation_title());
         resultlist_back = findViewById(R.id.resultlist_back);
@@ -35,7 +35,9 @@ public class PresentationResultListActivity extends AppCompatActivity {
         resultlist_to_practice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),PresentationPracticeActivity.class));
+                Intent intent = new Intent(view.getContext(),PresentationPracticeActivity.class);
+                intent.putExtra("presentationItem",presentationItem);
+                startActivity(intent);
             }
         });
 

@@ -9,13 +9,11 @@
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/resultlist_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         >
         <TextView
-            android:id="@+id/resultlist_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="발표분석"
@@ -27,7 +25,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
         <ImageButton
-            android:id="@+id/resultlist_back"
+            android:id="@+id/analysis_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -77,28 +75,61 @@
                     android:textStyle="bold"
                     android:textColor="@color/textprimary"
                     />
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="5dp"
-                    android:drawableLeft="@drawable/ic_time"
-                    android:text="  총 발표 시간:"
-                    android:textSize="16dp"
-                    android:textColor="@color/textprimaryinverse"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_time"
+                        android:text="  총 발표 시간:  "
+                        android:textSize="16dp"
+                        android:textColor="@color/textprimaryinverse"
+                        />
+                    <TextView
+                        android:id="@+id/analysis_practice_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00분 00초"
+                        android:textSize="16dp"
+                        android:textColor="@color/textprimary"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
-                    android:drawableLeft="@drawable/ic_time_pass"
-                    android:text="  예상 발표 시간:"
-                    android:textSize="16dp"
-                    android:textColor="@color/textprimaryinverse"
-                    />
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_time_pass"
+                        android:text="  예상 발표 시간:  "
+                        android:textSize="16dp"
+                        android:textColor="@color/textprimaryinverse"
+                        />
+                    <TextView
+                        android:id="@+id/analysis_presentation_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00분 00초"
+                        android:textSize="16dp"
+                        android:textColor="@color/textprimary"
+                        />
+
+                </LinearLayout>
+
             </LinearLayout>
             <TextView
                 android:layout_width="match_parent"

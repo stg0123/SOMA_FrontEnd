@@ -17,12 +17,15 @@ import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,10 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -54,6 +61,18 @@ public class PresentationPracticeActivity extends AppCompatActivity {
     private int RECORD_PERMISSION_CODE = 21;
     private File file;
     private MediaRecorder mediaRecorder = null;
+
+    ConstraintLayout practice_presentation;
+    TextView practice_time;
+    Switch practice_switch;
+
+    Timer timer;
+    TimerTask timerTask;
+    private Handler timerHandler;
+
+    private int time=0;
+
+    private PresentationItem presentationItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +83,9 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         practice_script_text = findViewById(R.id.practice_script_text);
 
         file = new File(getExternalFilesDir(null),"record.m4a");
+        presentationItem = (PresentationItem) getIntent().getSerializableExtra("presentationItem");
+
+
 
         practice_keyword_flexbox = findViewById(R.id.practice_keyword_flexbox);
         String str[] = {"발표","어플리케이션","개인화","아이스크림","강아지"};
@@ -117,6 +139,23 @@ public class PresentationPracticeActivity extends AppCompatActivity {
 
 
 
+        practice_presentation = findViewById(R.id.practice_presentation);
+        practice_time = findViewById(R.id.practice_time);
+        practice_switch = findViewById(R.id.practice_switch);
+        practice_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    practice_presentation.addView(practice_time);
+                }else{
+                    practice_presentation.removeView(practice_time);
+                }
+
+            }
+        });
+
+        timer = new Timer();
+        timerHandler = new Handler();
         practice_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,11 +171,17 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                     isRecording = false;
                     practice_record.setImageDrawable(getDrawable(R.drawable.ic_start));
                     mediaRecorder.pause();
+                    practice_switch.getThumbDrawable().setTint(getColor(R.color.primary));
+
+                    timerTask.cancel();
                 }
                 else{
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                         isRecording = true;
                         practice_record.setImageDrawable(getDrawable(R.drawable.ic_pause));
+                        practice_switch.getThumbDrawable().setTint(getColor(R.color.error));
+                        timerTask = createTimerTask();
+                        timer.schedule(timerTask,1000,1000);
                         if(mediaRecorder == null){
                             mediaRecorder = new MediaRecorder();
                             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -167,6 +212,8 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                 startanalysis(view);
             }
         });
+
+
 
 
 
@@ -204,11 +251,16 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                             if(isRecording) {
                                 isRecording = false;
                                 practice_record.setImageDrawable(getDrawable(R.drawable.ic_start));
+                                practice_switch.getThumbDrawable().setTint(getColor(R.color.primary));
+                                timer.cancel();
                             }
                             mediaRecorder.stop();
                             mediaRecorder.release();
                             mediaRecorder = null;
-                            view.getContext().startActivity(new Intent(view.getContext(),AnalysisLoadingActivity.class));
+                            Intent intent = new Intent(view.getContext(),AnalysisActivity.class);
+                            intent.putExtra("presentationItem",presentationItem);
+                            intent.putExtra("practice_time",time);
+                            view.getContext().startActivity(intent);
 
                         }
                         else{
@@ -227,6 +279,25 @@ public class PresentationPracticeActivity extends AppCompatActivity {
 
     }
 
+    private TimerTask createTimerTask() {
+        TimerTask tT = new TimerTask() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void run() {
+                timerHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        time++;
+                        int m = time/60;
+                        int s = time%60;
+                        String localtime =  LocalTime.of(m,s).toString();
+                        practice_time.setText(localtime);
+                    }
+                });
+            }
+        };
+        return tT;
+    }
 
 
 

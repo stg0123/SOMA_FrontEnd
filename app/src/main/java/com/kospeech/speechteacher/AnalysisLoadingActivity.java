@@ -4,7 +4,9 @@ import static android.content.ContentValues.TAG;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Presentation;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,8 +50,10 @@ public class AnalysisLoadingActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<PresentationResult> call, Response<PresentationResult> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.d(TAG, "onResponse: "+response.body().toString());
-                    analysis_text.setText(response.body().toString());
+                    Intent intent = new Intent(getApplicationContext(),AnalysisActivity.class);
+                    intent.putExtra("presentationResult",response.body());
+                    intent.putExtra("presentationItem",getIntent().getSerializableExtra("presentationItem"));
+                    startActivity(intent);
                 } else {
                     try {
                         Gson gson = new Gson();

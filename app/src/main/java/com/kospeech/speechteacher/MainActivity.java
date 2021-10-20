@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(new ItemSelectedListener());
 
 
-        startActivity(new Intent(this, AnalysisActivity.class));
 
     }
 
