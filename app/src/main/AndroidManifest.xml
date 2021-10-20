@@ -15,10 +15,14 @@
         android:roundIcon="@mipmap/logo_round"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".AnalysisLoadingActivity"
+            android:name=".AnalysisActivity"
             android:exported="true"
             android:theme="@style/Theme.SpeechTeacher"
             />
+        <activity
+            android:name=".AnalysisLoadingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SpeechTeacher" />
         <activity
             android:name=".PresentationResultListActivity"
             android:exported="true"

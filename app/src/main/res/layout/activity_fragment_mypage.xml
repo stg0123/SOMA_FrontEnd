@@ -39,29 +39,30 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toTopOf="@id/tmp_divisor"
             >
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="회원정보"
-                    android:textSize="20sp"
                     android:textColor="@color/textprimary"
-                    />
+                    android:textSize="20sp" />
+
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
+
                 <TextView
                     android:id="@+id/mypage_toupdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="수정"
-                    android:textColor="@color/accent"
-                    />
+                    android:textColor="@color/accent" />
 
             </LinearLayout>
 

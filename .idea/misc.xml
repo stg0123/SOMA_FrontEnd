@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/bottomnav_border.xml" value="0.246875" />
         <entry key="app/src/main/res/drawable/change_ic.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/chevron_right_ic.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/ic_add.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_chevron_left.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_chevron_right.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_chevron_right2.xml" value="0.4197916666666667" />
@@ -41,6 +42,7 @@
         <entry key="app/src/main/res/drawable/start_ic.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/stop_ic.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/font/font_custom.xml" value="0.2609375" />
+        <entry key="app/src/main/res/layout/activity_analysis.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_analysis_loading.xml" value="0.38958333333333334" />
         <entry key="app/src/main/res/layout/activity_fragment_mypage.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_fragment_presentation.xml" value="0.375" />

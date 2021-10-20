@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
         menu = bottomNav.getMenu();
         menu.findItem(R.id.bottom_presentation).setIcon(R.drawable.ic_mic_on);
         bottomNav.setOnNavigationItemSelectedListener(new ItemSelectedListener());
+
+
+        startActivity(new Intent(this, AnalysisActivity.class));
+
     }
 
     class ItemSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener{
