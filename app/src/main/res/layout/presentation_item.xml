@@ -122,12 +122,13 @@
             android:background="@drawable/oval_background2"
             android:gravity="center"
             >
+
             <ImageView
                 android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_time"/>
+                android:src="@drawable/ic_timer" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="28dp"

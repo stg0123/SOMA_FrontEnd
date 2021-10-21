@@ -18,6 +18,25 @@ public class PresentationResult implements Serializable {
     @SerializedName("speed")
     private List<List<Float>> speed;
 
+    public Map<String, Integer> getDuplicatedWords() {
+        return duplicatedWords;
+    }
+
+    public Map<String, List<String>> getUnsuitableWords() {
+        return unsuitableWords;
+    }
+
+    public List<List<Float>> getGap() {
+        return gap;
+    }
+
+    public List<Float> getTune() {
+        return tune;
+    }
+
+    public List<List<Float>> getSpeed() {
+        return speed;
+    }
 
     @Override
     public String toString() {

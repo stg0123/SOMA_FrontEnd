@@ -89,17 +89,7 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             presentationmakebutton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AlertDialog.Builder ad = new AlertDialog.Builder(view.getContext());
-                    ad.setIcon(R.drawable.mini_logo);
-                    ad.setMessage("원소의 개수는 "+Integer.toString(mData.size())+"개 입니다.");
-                    ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-
-                    ad.show();
+                    view.getContext().startActivity(new Intent(view.getContext(),PresentationMakeActivity.class));
                 }
             });
 
