@@ -3,10 +3,11 @@ package com.kospeech.speechteacher;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PresentationItem implements Serializable {
     @SerializedName("presentation_id")
-    private int presentation_id;
+    private String presentation_id;
     @SerializedName("user_id")
     private String user_id;
     @SerializedName("presentation_title")
@@ -19,12 +20,12 @@ public class PresentationItem implements Serializable {
     private String presentation_ex_dupword;
     @SerializedName("presentation_ex_improper")
     private String presentation_ex_improper;
-    @SerializedName("presentation_result_count")
-    private int presentation_result_count;
+    @SerializedName("presentation_result_info")
+    private List<List<String>> presentation_result_info;
     @SerializedName("presentation_file_url")
     private String presentation_file_url;
 
-    public int getPresentation_id() {
+    public String getPresentation_id() {
         return presentation_id;
     }
 
@@ -52,8 +53,8 @@ public class PresentationItem implements Serializable {
         return presentation_ex_improper;
     }
 
-    public int getPresentation_result_count() {
-        return presentation_result_count;
+    public List<List<String>> getPresentation_result_info() {
+        return presentation_result_info;
     }
 
     public String getPresentation_file_url() {
@@ -63,14 +64,15 @@ public class PresentationItem implements Serializable {
     @Override
     public String toString() {
         return "PresentationItem{" +
-                "presentation_id=" + presentation_id +
+                "presentation_id='" + presentation_id + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", presntation_title='" + presntation_title + '\'' +
                 ", presentation_time='" + presentation_time + '\'' +
                 ", presentation_date='" + presentation_date + '\'' +
                 ", presentation_ex_dupword='" + presentation_ex_dupword + '\'' +
                 ", presentation_ex_improper='" + presentation_ex_improper + '\'' +
-                ", presentation_result_count=" + presentation_result_count +
+                ", presentation_result_info=" + presentation_result_info +
+                ", presentation_file_url='" + presentation_file_url + '\'' +
                 '}';
     }
 }

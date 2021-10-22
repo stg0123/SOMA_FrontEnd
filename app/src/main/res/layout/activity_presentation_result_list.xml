@@ -81,6 +81,7 @@
             android:orientation="vertical"
             >
             <Button
+                android:id="@+id/resultlist_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="7월 20일 13:00"

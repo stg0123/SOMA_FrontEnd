@@ -47,7 +47,7 @@ public class FragmentPresentation extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
         RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
 
-        retrofitService.getpresentation().enqueue(new Callback<List<PresentationItem>>() {
+        retrofitService.getallpresentation().enqueue(new Callback<List<PresentationItem>>() {
             @Override
             public void onResponse(Call<List<PresentationItem>> call, Response<List<PresentationItem>> response) {
                 if(response.isSuccessful() && response.body()!=null){

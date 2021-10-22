@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,15 +31,24 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+import com.github.barteksc.pdfviewer.util.FitPolicy;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.gson.Gson;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -72,7 +83,9 @@ public class PresentationPracticeActivity extends AppCompatActivity {
 
     private int time=0;
 
-    private PresentationItem presentationItem;
+    private PresentationItem presentationItem,presentation;
+
+    PDFView practice_presentation_pdf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +97,35 @@ public class PresentationPracticeActivity extends AppCompatActivity {
 
         file = new File(getExternalFilesDir(null),"record.m4a");
         presentationItem = (PresentationItem) getIntent().getSerializableExtra("presentationItem");
+
+        practice_presentation_pdf = findViewById(R.id.practice_presentation_pdf);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
+
+        retrofitService.getpresentation(presentationItem.getPresentation_id()).enqueue(new Callback<PresentationItem>() {
+            @Override
+            public void onResponse(Call<PresentationItem> call, Response<PresentationItem> response) {
+                if(response.isSuccessful() && response.body()!=null) {
+                    presentation = response.body();
+                    new RetrivePDFfromUrl().execute(presentation.getPresentation_file_url());
+                }
+                else{
+                    try {
+                        Gson gson = new Gson();
+                        ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                        Toast.makeText( getApplicationContext() , data.message, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PresentationItem> call, Throwable t) {
+                Log.d(TAG, "onFailure: connection fail");
+            }
+        });
 
 
 
@@ -299,6 +341,54 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         return tT;
     }
 
+
+    class RetrivePDFfromUrl extends AsyncTask<String, Void, InputStream> {
+        @Override
+        protected InputStream doInBackground(String... strings) {
+            // we are using inputstream
+            // for getting out PDF.
+            InputStream inputStream = null;
+            try {
+                URL url = new URL(strings[0]);
+                // below is the step where we are
+                // creating our connection.
+                HttpURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+                if (urlConnection.getResponseCode() == 200) {
+                    // response is success.
+                    // we are getting input stream from url
+                    // and storing it in our variable.
+                    inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                }
+
+            } catch (IOException e) {
+                // this is the method
+                // to handle errors.
+                e.printStackTrace();
+                return null;
+            }
+            return inputStream;
+        }
+
+        @Override
+        protected void onPostExecute(InputStream inputStream) {
+            // after the execution of our async
+            // task we are loading our pdf in our pdf view.
+            practice_presentation_pdf.fromStream(inputStream)
+                    .swipeHorizontal(true)
+                    .pageSnap(true)
+                    .pageFling(true)
+                    .enableDoubletap(false)
+                    .pageFitPolicy(FitPolicy.BOTH)
+                    .autoSpacing(true)
+                    .onPageChange(new OnPageChangeListener() {
+                        @Override
+                        public void onPageChanged(int page, int pageCount) {
+                            Log.d(TAG, "onPageChanged: "+Integer.toString(page)+" "+Integer.toString(pageCount));
+                        }
+                    })
+                    .load();
+        }
+    }
 
 
 }

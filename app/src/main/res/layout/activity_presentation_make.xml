@@ -38,7 +38,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/presentation_make_presentation"
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@id/presentation_make_title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
-    <TextView
+    <EditText
         android:id="@+id/presentation_make_title_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,7 +59,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:padding="10dp"
-        android:text="발표 제목"
+        android:hint="발표 제목을 입력하세요"
+        android:maxLength="15"
+        android:singleLine="true"
         android:textStyle="bold"
         android:textColor="@color/textprimary"
         android:textSize="16dp"
@@ -85,6 +87,7 @@
             android:orientation="vertical"
             >
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/presentation_make_file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -122,6 +125,7 @@
                         android:textSize="16dp"
                         android:textColor="@color/textprimary"/>
                     <TextView
+                        android:id="@+id/presentation_make_file_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="미설정"
@@ -289,7 +293,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="타이머 설"
+                        android:text="타이머 설정"
                         android:textSize="16dp"
                         android:textColor="@color/textprimary"/>
                     <TextView
@@ -346,7 +350,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="발표일 설"
+                        android:text="발표일 설정"
                         android:textSize="16dp"
                         android:textColor="@color/textprimary"/>
                     <TextView
