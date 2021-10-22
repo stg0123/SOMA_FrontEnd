@@ -127,8 +127,6 @@ public class PresentationPracticeActivity extends AppCompatActivity {
             }
         });
 
-
-
         practice_keyword_flexbox = findViewById(R.id.practice_keyword_flexbox);
         String str[] = {"발표","어플리케이션","개인화","아이스크림","강아지"};
         for(int i=0;i<5;i++){
