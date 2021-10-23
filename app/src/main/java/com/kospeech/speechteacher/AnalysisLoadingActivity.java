@@ -52,13 +52,17 @@ public class AnalysisLoadingActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Intent intent = new Intent(getApplicationContext(),AnalysisActivity.class);
                     intent.putExtra("presentationResult",response.body());
+                    intent.putExtra("practice_time",getIntent().getIntExtra("practice_time",0));
                     intent.putExtra("presentationItem",getIntent().getSerializableExtra("presentationItem"));
                     startActivity(intent);
+                    Log.d(TAG, "onResponse: "+response.body().toString());
+                    finish();
                 } else {
                     try {
                         Gson gson = new Gson();
                         ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
                         Toast.makeText( getApplicationContext() , data.message, Toast.LENGTH_SHORT).show();
+                        finish();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

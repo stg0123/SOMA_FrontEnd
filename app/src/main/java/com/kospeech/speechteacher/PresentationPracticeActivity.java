@@ -299,10 +299,11 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                             mediaRecorder.stop();
                             mediaRecorder.release();
                             mediaRecorder = null;
-                            Intent intent = new Intent(view.getContext(),AnalysisActivity.class);
+                            Intent intent = new Intent(view.getContext(),AnalysisLoadingActivity.class);
                             intent.putExtra("presentationItem",presentationItem);
                             intent.putExtra("practice_time",time);
                             view.getContext().startActivity(intent);
+                            finish();
 
                         }
                         else{

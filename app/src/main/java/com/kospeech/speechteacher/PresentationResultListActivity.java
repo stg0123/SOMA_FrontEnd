@@ -46,6 +46,7 @@ public class PresentationResultListActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(),PresentationPracticeActivity.class);
                 intent.putExtra("presentationItem",presentationItem);
                 startActivity(intent);
+                finish();
             }
         });
 
