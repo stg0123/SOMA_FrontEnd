@@ -86,6 +86,9 @@ public class PresentationPracticeActivity extends AppCompatActivity {
     private PresentationItem presentationItem,presentation;
 
     PDFView practice_presentation_pdf;
+
+    View practice_presentation_left,practice_presentation_right;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +102,9 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         presentationItem = (PresentationItem) getIntent().getSerializableExtra("presentationItem");
 
         practice_presentation_pdf = findViewById(R.id.practice_presentation_pdf);
+        practice_presentation_left = findViewById(R.id.practice_presentation_left);
+        practice_presentation_right = findViewById(R.id.practice_presentation_right);
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
@@ -381,6 +387,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                     .enableDoubletap(false)
                     .pageFitPolicy(FitPolicy.BOTH)
                     .autoSpacing(true)
+                    .enableSwipe(false)
                     .onPageChange(new OnPageChangeListener() {
                         @Override
                         public void onPageChanged(int page, int pageCount) {
@@ -388,6 +395,22 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                         }
                     })
                     .load();
+
+            practice_presentation_left.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    practice_presentation_pdf.jumpTo(practice_presentation_pdf.getCurrentPage()-1);
+                    practice_presentation_pdf.performPageSnap();
+                }
+            });
+            practice_presentation_right.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    practice_presentation_pdf.jumpTo(practice_presentation_pdf.getCurrentPage()+1);
+                    practice_presentation_pdf.performPageSnap();
+                }
+            });
+
         }
     }
 
