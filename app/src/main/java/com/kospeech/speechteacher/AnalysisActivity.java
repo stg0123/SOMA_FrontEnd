@@ -25,6 +25,7 @@ import java.util.ArrayList;
 public class AnalysisActivity extends AppCompatActivity {
     ImageButton analysis_back;
     TextView analysis_practice_time,analysis_presentation_time;
+    TextView analysis_dupword_status,analysis_unsuitable_status,analysis_gap_status,analysis_tune_status,analysis_speed_status,analysis_fillerwords_status;
     RadarChart analysis_radar;
     private PresentationResult presentationResult;
     private PresentationItem presentationItem;
@@ -51,15 +52,43 @@ public class AnalysisActivity extends AppCompatActivity {
         String presentation_time = presentationItem.getPresentation_time();
         analysis_presentation_time.setText(presentation_time.substring(0,2)+"시 "+presentation_time.substring(3,5)+"분 00초");
 
+        analysis_dupword_status =findViewById(R.id.analysis_dupword_status);
+        analysis_unsuitable_status =findViewById(R.id.analysis_unsuitable_status);
+        analysis_gap_status =findViewById(R.id.analysis_gap_status);
+        analysis_tune_status = findViewById(R.id.analysis_tune_status);
+        analysis_speed_status = findViewById(R.id.analysis_speed_status);
+        analysis_fillerwords_status = findViewById(R.id.analysis_fillerwords_status);
+        if(!presentationResult.getDuplicatedWords().isEmpty()){
+            analysis_dupword_status.setText("검출");
+            analysis_dupword_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+        }
+        if(!presentationResult.getUnsuitableWords().isEmpty()){
+            analysis_unsuitable_status.setText("검출");
+            analysis_unsuitable_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+        }
+        if(!presentationResult.getGap().isEmpty()){
+            analysis_gap_status.setText("검출");
+            analysis_gap_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+        }
+        if(!presentationResult.getTune().isEmpty()){
+            analysis_tune_status.setText("검출");
+            analysis_tune_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+        }
+        if(!presentationResult.getSpeed().isEmpty()){
+            analysis_speed_status.setText("검출");
+            analysis_speed_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+        }
+
+
 
         analysis_radar = findViewById(R.id.analysis_radar);
         ArrayList<RadarEntry> visitors = new ArrayList<>();
+        visitors.add(new RadarEntry(30 - presentationResult.getDuplicatedWords().size()));
+        visitors.add(new RadarEntry(10 - presentationResult.getUnsuitableWords().size()));
+        visitors.add(new RadarEntry(10 - presentationResult.getGap().size()));
+        visitors.add(new RadarEntry(10 - presentationResult.getTune().size()));
+        visitors.add(new RadarEntry(11 - presentationResult.getSpeed().size()));
         visitors.add(new RadarEntry(10));
-        visitors.add(new RadarEntry(5));
-        visitors.add(new RadarEntry(13));
-        visitors.add(new RadarEntry(8));
-        visitors.add(new RadarEntry(11));
-        visitors.add(new RadarEntry(3));
 
         RadarDataSet radarDataSet = new RadarDataSet(visitors,"visitors");
         radarDataSet.setColor(getColor(R.color.primary));

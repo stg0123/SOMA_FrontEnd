@@ -5,6 +5,8 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.246875" />
         <entry key="app/src/main/res/drawable/add_ic.xml" value="0.24322916666666666" />
+        <entry key="app/src/main/res/drawable/analysis_status_bad.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/analysis_status_ok.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/background_primary.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/background_splash.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/bottomnav_border.xml" value="0.246875" />
@@ -50,7 +52,7 @@
         <entry key="app/src/main/res/drawable/switch_track_on.xml" value="0.2916666666666667" />
         <entry key="app/src/main/res/drawable/switch_track_selector.xml" value="0.2916666666666667" />
         <entry key="app/src/main/res/font/font_custom.xml" value="0.2609375" />
-        <entry key="app/src/main/res/layout/activity_analysis.xml" value="0.30512820512820515" />
+        <entry key="app/src/main/res/layout/activity_analysis.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_analysis_detail.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_analysis_loading.xml" value="0.38958333333333334" />
         <entry key="app/src/main/res/layout/activity_fragment_mypage.xml" value="0.4036458333333333" />
