@@ -4,32 +4,45 @@ package com.kospeech.speechteacher;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<PresentationItem> mData= null;
     private final int TYPE_HEADER = 0;
     private final int TYPE_ITEM = 1;
     private final int TYPE_FOOTER = 2;
-    public PresentationViewAdapter(ArrayList<PresentationItem> data) {
+    private Activity activity;
+    public PresentationViewAdapter(ArrayList<PresentationItem> data,Activity curactivity) {
         mData=data;
+        activity = curactivity;
     }
 
 
@@ -101,9 +114,8 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView titleView;
-        TextView numberView;
-        TextView dateView;
+        TextView titleView,numberView,dateView;
+        LinearLayout presentation_item_delete;
         public ItemViewHolder(@NonNull View view) {
             super(view);
             view.setOnClickListener(new View.OnClickListener() {
@@ -130,18 +142,76 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             titleView = view.findViewById(R.id.titleText);
             numberView = view.findViewById(R.id.numberText);
             dateView = view.findViewById(R.id.dateText);
-            
-            numberView.setOnClickListener(new View.OnClickListener() {
+            presentation_item_delete = view.findViewById(R.id.presentation_item_delete);
+            presentation_item_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(), numberView.getText().toString(), Toast.LENGTH_SHORT).show();
+                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(view.getContext());
+                    builder.setMessage("발표연습을 삭제하면 복구가 불가능합니다. 정말 삭제하시겟습니까?")
+                            .setTitle("발표연습을 삭제하시겠습니까?")
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+                                    RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
+                                    retrofitService.deletepresentation(mData.get(getAdapterPosition()).getPresentation_id()).enqueue(new Callback<DeletePresentation>() {
+                                        @Override
+                                        public void onResponse(Call<DeletePresentation> call, Response<DeletePresentation> response) {
+                                            if(response.isSuccessful() && response.body()!=null){
+                                                Toast.makeText(view.getContext(),response.body().message, Toast.LENGTH_SHORT).show();
+                                                Intent intent = activity.getIntent();
+                                                activity.finish();
+                                                activity.overridePendingTransition(0,0);
+                                                activity.startActivity(intent);
+                                                activity.overridePendingTransition(0,0);
+                                            }
+                                            else{
+                                                try {
+                                                    Gson gson = new Gson();
+                                                    ErrorData data = gson.fromJson(response.errorBody().string(),ErrorData.class);
+                                                    Toast.makeText(view.getContext(),"Error"+ data.message, Toast.LENGTH_SHORT).show();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<DeletePresentation> call, Throwable t) {
+                                            Toast.makeText(view.getContext(),"connection is failed",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+
+                                }
+                            })
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
                 }
             });
-
         }
 
     }
 
+    public class DeletePresentation{
+        @SerializedName("message")
+        private String message;
+
+        @Override
+        public String toString() {
+            return "joinData{" +
+                    "message='" + message + '\'' +
+                    '}';
+        }
+    }
 
 }
 

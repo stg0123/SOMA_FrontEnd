@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -20,13 +21,18 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AnalysisActivity extends AppCompatActivity {
     ImageButton analysis_back;
     TextView analysis_practice_time,analysis_presentation_time;
     TextView analysis_dupword_status,analysis_unsuitable_status,analysis_gap_status,analysis_tune_status,analysis_speed_status,analysis_fillerwords_status;
     RadarChart analysis_radar;
+    LinearLayout analysis_dupword,analysis_unsuitable,analysis_gap,analysis_tune,analysis_speed,analysis_fillerwords;
     private PresentationResult presentationResult;
     private PresentationItem presentationItem;
     @Override
@@ -58,32 +64,86 @@ public class AnalysisActivity extends AppCompatActivity {
         analysis_tune_status = findViewById(R.id.analysis_tune_status);
         analysis_speed_status = findViewById(R.id.analysis_speed_status);
         analysis_fillerwords_status = findViewById(R.id.analysis_fillerwords_status);
+
+        analysis_dupword = findViewById(R.id.analysis_dupword);
+        analysis_unsuitable = findViewById(R.id.analysis_unsuitable);
+        analysis_gap = findViewById(R.id.analysis_gap);
+        analysis_tune = findViewById(R.id.analysis_tune);
+        analysis_speed = findViewById(R.id.analysis_speed);
+        analysis_fillerwords = findViewById(R.id.analysis_fillerwords);
+
         if(!presentationResult.getDuplicatedWords().isEmpty()){
             analysis_dupword_status.setText("검출");
             analysis_dupword_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+            analysis_dupword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                    detailintent.putExtra("kind",1);
+                    detailintent.putExtra("presentationResult",presentationResult);
+                    startActivity(detailintent);
+                }
+            });
         }
         if(!presentationResult.getUnsuitableWords().isEmpty()){
             analysis_unsuitable_status.setText("검출");
             analysis_unsuitable_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+            analysis_unsuitable.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                    detailintent.putExtra("kind",2);
+                    detailintent.putExtra("presentationResult",presentationResult);
+                    startActivity(detailintent);
+                }
+            });
         }
         if(!presentationResult.getGap().isEmpty()){
             analysis_gap_status.setText("검출");
             analysis_gap_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+            analysis_gap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                    detailintent.putExtra("kind",3);
+                    detailintent.putExtra("presentationResult",presentationResult);
+                    startActivity(detailintent);
+                }
+            });
         }
         if(!presentationResult.getTune().isEmpty()){
             analysis_tune_status.setText("검출");
             analysis_tune_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+            analysis_tune.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                    detailintent.putExtra("kind",4);
+                    detailintent.putExtra("presentationResult",presentationResult);
+                    startActivity(detailintent);
+                }
+            });
         }
         if(!presentationResult.getSpeed().isEmpty()){
             analysis_speed_status.setText("검출");
             analysis_speed_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+            analysis_speed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                    detailintent.putExtra("kind",5);
+                    detailintent.putExtra("presentationResult",presentationResult);
+                    startActivity(detailintent);
+                }
+            });
         }
+
 
 
 
         analysis_radar = findViewById(R.id.analysis_radar);
         ArrayList<RadarEntry> visitors = new ArrayList<>();
-        visitors.add(new RadarEntry(30 - presentationResult.getDuplicatedWords().size()));
+        visitors.add(new RadarEntry(10 - presentationResult.getDuplicatedWords().size()));
         visitors.add(new RadarEntry(10 - presentationResult.getUnsuitableWords().size()));
         visitors.add(new RadarEntry(10 - presentationResult.getGap().size()));
         visitors.add(new RadarEntry(10 - presentationResult.getTune().size()));

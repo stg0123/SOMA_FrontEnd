@@ -150,6 +150,7 @@
                 android:padding="20dp" />
 
             <LinearLayout
+                android:id="@+id/analysis_dupword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -189,6 +190,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/analysis_unsuitable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -228,6 +230,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/analysis_gap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -267,6 +270,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/analysis_tune"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -306,6 +310,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/analysis_speed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -345,6 +350,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/analysis_fillerwords"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"

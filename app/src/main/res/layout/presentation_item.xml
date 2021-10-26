@@ -154,6 +154,7 @@
             android:layout_weight="1"/>
 
         <LinearLayout
+            android:id="@+id/presentation_item_delete"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_margin="5dp"

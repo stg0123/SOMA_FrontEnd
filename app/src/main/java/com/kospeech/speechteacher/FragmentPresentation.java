@@ -40,7 +40,7 @@ public class FragmentPresentation extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.presentation_view);
         mList = new ArrayList<>();
-        mAdapter = new PresentationViewAdapter(mList);
+        mAdapter = new PresentationViewAdapter(mList,getActivity());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext(), RecyclerView.VERTICAL, false));
 
