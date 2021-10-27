@@ -22,35 +22,41 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.listener.OnTapListener;
 import com.github.barteksc.pdfviewer.util.FitPolicy;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class PresentationMakeActivity extends AppCompatActivity {
     ImageButton presentation_make_back;
-    ConstraintLayout presentation_make_file,presentation_make_keyword;
-    TextView presentation_make_file_setting;
+    ConstraintLayout presentation_make_file,presentation_make_keyword,presentation_make_script;
+    TextView presentation_make_file_setting,presentation_make_keyword_setting,presentation_make_script_setting;
     Button presentation_make_start;
     PDFView presentation_make_presentation;
     View presentation_make_presentation_left,presentation_make_presentation_right;
 
-    private Uri uri = null;
-    private static final int CODE_FILE = 1, CODE_KEYWORD=2;
+    private PresentationMakeItem presentationMakeItem;
 
+    private Uri uri = null;
+    private static final int CODE_FILE = 1, CODE_KEYWORD=2, CODE_SCRIPT=3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presentation_make);
+        presentationMakeItem = new PresentationMakeItem();
+
 
         presentation_make_file_setting = findViewById(R.id.presentation_make_file_setting);
-
         presentation_make_presentation = findViewById(R.id.presentation_make_presentation);
         presentation_make_presentation_left = findViewById(R.id.presentation_make_presentation_left);
         presentation_make_presentation_right = findViewById(R.id.presentation_make_presentation_right);
 
+        presentation_make_keyword_setting = findViewById(R.id.presentation_make_keyword_setting);
+        presentation_make_script_setting = findViewById(R.id.presentation_make_script_setting);
 
         presentation_make_start =findViewById(R.id.presentation_make_start);
 
@@ -66,10 +72,36 @@ public class PresentationMakeActivity extends AppCompatActivity {
         presentation_make_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("application/pdf");
-                startActivityForResult(intent, CODE_FILE);
+                if(uri != null){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setMessage("발표자료 변경시 다른 설정이 초기화됩니다.")
+                            .setTitle("발표자료 변경시 주의")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                    intent.setType("application/pdf");
+                                    startActivityForResult(intent, CODE_FILE);
+                                    dialogInterface.cancel();
+                                }
+                            })
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                else {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("application/pdf");
+                    startActivityForResult(intent, CODE_FILE);
+                }
             }
         });
 
@@ -80,11 +112,38 @@ public class PresentationMakeActivity extends AppCompatActivity {
                 if(uri != null) {
                     Intent intent = new Intent(view.getContext(), PresentationMakeKeywordActivity.class);
                     intent.putExtra("uri", uri);
-                    startActivity(intent);
+                    intent.putExtra("presentationmakeitem",presentationMakeItem);
+                    startActivityForResult(intent, CODE_KEYWORD);
                 }
                 else{
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                     builder.setMessage("발표자료를 등록해야 키워드를 설정할 수 있습니다.")
+                            .setTitle("발표자료를 등록해주세요")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            }
+        });
+
+        presentation_make_script = findViewById(R.id.presentation_make_script);
+        presentation_make_script.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(uri != null) {
+                    Intent intent = new Intent(view.getContext(), PresentationMakeScriptActivity.class);
+                    intent.putExtra("uri", uri);
+                    intent.putExtra("presentationmakeitem",presentationMakeItem);
+                    startActivityForResult(intent, CODE_SCRIPT);
+                }
+                else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setMessage("발표자료를 등록해야 대본을 설정할 수 있습니다.")
                             .setTitle("발표자료를 등록해주세요")
                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                 @Override
@@ -140,10 +199,15 @@ public class PresentationMakeActivity extends AppCompatActivity {
                     .pageFitPolicy(FitPolicy.BOTH)
                     .autoSpacing(true)
                     .enableSwipe(false)
-                    .onPageChange(new OnPageChangeListener() {
+                    .onLoad(new OnLoadCompleteListener() {
                         @Override
-                        public void onPageChanged(int page, int pageCount) {
-                            Log.d(TAG, "onPageChanged: "+Integer.toString(page)+" "+Integer.toString(pageCount));
+                        public void loadComplete(int nbPages) {
+                            presentationMakeItem.keywords = new ArrayList<>();
+                            presentationMakeItem.script = new ArrayList<>();
+                            for(int i=0;i<nbPages;i++) {
+                                presentationMakeItem.keywords.add(new ArrayList<>());
+                                presentationMakeItem.script.add("");
+                            }
                         }
                     })
                     .load();
@@ -165,6 +229,20 @@ public class PresentationMakeActivity extends AppCompatActivity {
 
 
         }
+        else if(requestCode == CODE_KEYWORD && resultCode == RESULT_OK){
+            presentationMakeItem = (PresentationMakeItem) data.getSerializableExtra("presentationmakeitem");
+            presentation_make_keyword_setting.setText("설정완료");
+            presentation_make_keyword_setting.setTextColor(getColor(R.color.accent));
+
+        }
+        else if(requestCode == CODE_SCRIPT && resultCode == RESULT_OK){
+            presentationMakeItem = (PresentationMakeItem) data.getSerializableExtra("presentationmakeitem");
+            presentation_make_script_setting.setText("설정완료");
+            presentation_make_script_setting.setTextColor(getColor(R.color.accent));
+        }
+
+
+
 
         super.onActivityResult(requestCode,resultCode,data);
 

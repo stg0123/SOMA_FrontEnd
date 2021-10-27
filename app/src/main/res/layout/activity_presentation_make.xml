@@ -216,6 +216,7 @@
                         android:textSize="16dp"
                         android:textColor="@color/textprimary"/>
                     <TextView
+                        android:id="@+id/presentation_make_keyword_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="미설정"
@@ -236,6 +237,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/presentation_make_script"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -273,6 +275,7 @@
                         android:textSize="16dp"
                         android:textColor="@color/textprimary"/>
                     <TextView
+                        android:id="@+id/presentation_make_script_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="미설정"
