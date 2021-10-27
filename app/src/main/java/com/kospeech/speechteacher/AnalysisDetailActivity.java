@@ -3,6 +3,7 @@ package com.kospeech.speechteacher;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import org.w3c.dom.Text;
 public class AnalysisDetailActivity extends AppCompatActivity {
     ImageButton analysis_detail_back;
     LinearLayout analysis_detail_barlist,analysis_detail_itemlist;
+    private PresentationResult presentationResult;
+    private int kind;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +25,9 @@ public class AnalysisDetailActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         analysis_detail_barlist = findViewById(R.id.analysis_detail_barlist);
         analysis_detail_itemlist = findViewById(R.id.analysis_detail_itemlist);
+        Intent intent = getIntent();
+        presentationResult = (PresentationResult) intent.getSerializableExtra("presentationResult");
+        kind = intent.getIntExtra("kind",0);
 
         analysis_detail_back = findViewById(R.id.analysis_detail_back);
         analysis_detail_back.setOnClickListener(new View.OnClickListener() {

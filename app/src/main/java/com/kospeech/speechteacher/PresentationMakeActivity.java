@@ -30,12 +30,14 @@ import java.io.File;
 
 public class PresentationMakeActivity extends AppCompatActivity {
     ImageButton presentation_make_back;
-    ConstraintLayout presentation_make_file;
+    ConstraintLayout presentation_make_file,presentation_make_keyword;
     TextView presentation_make_file_setting;
     Button presentation_make_start;
     PDFView presentation_make_presentation;
+    View presentation_make_presentation_left,presentation_make_presentation_right;
 
-    private static final int CODE_FILE = 1;
+    private Uri uri = null;
+    private static final int CODE_FILE = 1, CODE_KEYWORD=2;
 
 
     @Override
@@ -46,6 +48,9 @@ public class PresentationMakeActivity extends AppCompatActivity {
         presentation_make_file_setting = findViewById(R.id.presentation_make_file_setting);
 
         presentation_make_presentation = findViewById(R.id.presentation_make_presentation);
+        presentation_make_presentation_left = findViewById(R.id.presentation_make_presentation_left);
+        presentation_make_presentation_right = findViewById(R.id.presentation_make_presentation_right);
+
 
         presentation_make_start =findViewById(R.id.presentation_make_start);
 
@@ -68,6 +73,30 @@ public class PresentationMakeActivity extends AppCompatActivity {
             }
         });
 
+        presentation_make_keyword = findViewById(R.id.presentation_make_keyword);
+        presentation_make_keyword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(uri != null) {
+                    Intent intent = new Intent(view.getContext(), PresentationMakeKeywordActivity.class);
+                    intent.putExtra("uri", uri);
+                    startActivity(intent);
+                }
+                else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setMessage("발표자료를 등록해야 키워드를 설정할 수 있습니다.")
+                            .setTitle("발표자료를 등록해주세요")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            }
+        });
 
 
 
@@ -98,7 +127,7 @@ public class PresentationMakeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == CODE_FILE && resultCode == RESULT_OK){
-            Uri uri = data.getData();
+            uri = data.getData();
             String fileUri = uri.getPath().substring(uri.getPath().indexOf(":")+1);
             File file = new File(fileUri);
             presentation_make_file_setting.setText("설정완료 "+getName(uri));
@@ -110,6 +139,7 @@ public class PresentationMakeActivity extends AppCompatActivity {
                     .enableDoubletap(false)
                     .pageFitPolicy(FitPolicy.BOTH)
                     .autoSpacing(true)
+                    .enableSwipe(false)
                     .onPageChange(new OnPageChangeListener() {
                         @Override
                         public void onPageChanged(int page, int pageCount) {
@@ -118,16 +148,20 @@ public class PresentationMakeActivity extends AppCompatActivity {
                     })
                     .load();
 
-            presentation_make_start.setOnClickListener(new View.OnClickListener() {
+            presentation_make_presentation_left.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presentation_make_presentation.jumpTo(presentation_make_presentation.getCurrentPage()-1);
+                    presentation_make_presentation.performPageSnap();
+                }
+            });
+            presentation_make_presentation_right.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     presentation_make_presentation.jumpTo(presentation_make_presentation.getCurrentPage()+1);
                     presentation_make_presentation.performPageSnap();
-
                 }
             });
-
-
 
 
         }

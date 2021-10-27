@@ -15,10 +15,14 @@
         android:roundIcon="@mipmap/logo_round"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".PresentationMakeActivity"
+            android:name=".PresentationMakeKeywordActivity"
             android:exported="true"
             android:theme="@style/Theme.SpeechTeacher"
             />
+        <activity
+            android:name=".PresentationMakeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SpeechTeacher" />
         <activity
             android:name=".AnalysisDetailActivity"
             android:exported="true"
