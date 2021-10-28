@@ -1,5 +1,7 @@
 package com.kospeech.speechteacher;
 
+import static java.lang.Math.max;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -143,11 +145,11 @@ public class AnalysisActivity extends AppCompatActivity {
 
         analysis_radar = findViewById(R.id.analysis_radar);
         ArrayList<RadarEntry> visitors = new ArrayList<>();
-        visitors.add(new RadarEntry(10 - presentationResult.getDuplicatedWords().size()));
-        visitors.add(new RadarEntry(10 - presentationResult.getUnsuitableWords().size()));
-        visitors.add(new RadarEntry(10 - presentationResult.getGap().size()));
-        visitors.add(new RadarEntry(10 - presentationResult.getTune().size()));
-        visitors.add(new RadarEntry(11 - presentationResult.getSpeed().size()));
+        visitors.add(new RadarEntry(max(10 - presentationResult.getDuplicatedWords().size(),0)));
+        visitors.add(new RadarEntry(max(10 - presentationResult.getUnsuitableWords().size(),0)));
+        visitors.add(new RadarEntry(max(10 - presentationResult.getGap().size(),0)));
+        visitors.add(new RadarEntry(max(10 - presentationResult.getTune().size(),0)));
+        visitors.add(new RadarEntry(max(11 - presentationResult.getSpeed().size(),0)));
         visitors.add(new RadarEntry(10));
 
         RadarDataSet radarDataSet = new RadarDataSet(visitors,"visitors");
