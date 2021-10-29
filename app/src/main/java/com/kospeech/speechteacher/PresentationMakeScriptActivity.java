@@ -48,6 +48,7 @@ public class PresentationMakeScriptActivity extends AppCompatActivity {
         presentation_make_script_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                presentationMakeItem.script.set(presentation_make_script_presentation.getCurrentPage(),presentation_make_script_script.getText().toString());
                 Intent intent = new Intent();
                 intent.putExtra("presentationmakeitem",presentationMakeItem);
                 setResult(RESULT_OK,intent);

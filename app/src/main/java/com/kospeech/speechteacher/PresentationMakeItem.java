@@ -13,4 +13,14 @@ public class PresentationMakeItem implements Serializable {
     public String time;
     public String date;
 
+    @Override
+    public String toString() {
+        return "PresentationMakeItem{" +
+                "title='" + title + '\'' +
+                ", keywords=" + keywords +
+                ", script=" + script +
+                ", time='" + time + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
 }

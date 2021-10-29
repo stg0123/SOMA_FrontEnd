@@ -9,14 +9,21 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.FileUtils;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,7 +43,9 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -45,22 +54,23 @@ import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okio.BufferedSink;
+import okio.Okio;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PresentationMakeActivity extends AppCompatActivity {
     ImageButton presentation_make_back;
-    ConstraintLayout presentation_make_file,presentation_make_keyword,presentation_make_script,presentation_make_time,presentation_make_date;
+    ConstraintLayout presentation_make_file,presentation_make_keyword,presentation_make_script,presentation_make_time,presentation_make_date,presentation_make_exword;
     TextView presentation_make_file_setting,presentation_make_keyword_setting,presentation_make_script_setting,presentation_make_time_setting,presentation_make_date_setting;
     Button presentation_make_start;
     PDFView presentation_make_presentation;
     View presentation_make_presentation_left,presentation_make_presentation_right;
     EditText presentation_make_title_text;
     private PresentationMakeItem presentationMakeItem;
-
+    private String presentation_id =null;
     private Uri uri = null;
-    private File file = null;
     private String filename= null;
     private int mYear,mMonth,mDay;
     private static final int CODE_FILE = 1, CODE_KEYWORD=2, CODE_SCRIPT=3, CODE_TIME=4;
@@ -242,12 +252,10 @@ public class PresentationMakeActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<MakePresentation> call, Response<MakePresentation> response) {
                             if(response.isSuccessful() && response.body()!=null){
-                                String presentation_id = response.body().presentation_id;
+                                presentation_id = response.body().presentation_id;
                                 if(uri != null) {
-                                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/pdf"), file);
-                                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", filename, requestBody);
-
-                                    retrofitService.makepresentationfile(presentation_id, filePart).enqueue(new Callback<MakePresentationFile>() {
+                                    MultipartBody.Part filePart = uriToMultipart(uri,"file",presentation_id,getContentResolver());
+                                    retrofitService.makepresentationfile(response.body().presentation_id, filePart).enqueue(new Callback<MakePresentationFile>() {
                                         @Override
                                         public void onResponse(Call<MakePresentationFile> call, Response<MakePresentationFile> response) {
                                             if (response.isSuccessful() && response.body() != null) {
@@ -262,75 +270,72 @@ public class PresentationMakeActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-
                                         @Override
                                         public void onFailure(Call<MakePresentationFile> call, Throwable t) {
-                                            Toast.makeText(view.getContext(), "connection is failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(view.getContext(), "파일전송 실패", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }
-                                if(presentationMakeItem.keywords != null) {
-                                    Map<String,String> map = new HashMap<>();
-                                    for(int i=0;i<presentationMakeItem.keywords.size();i++){
-                                        String keyword = "";
-                                        for(String str : presentationMakeItem.keywords.get(i)){
-                                            if(!keyword.equals(""))
-                                                keyword+=",";
-                                            keyword+=str;
-                                        }
-                                        if(!keyword.equals(""))
-                                            map.put(Integer.toString(i),keyword);
-                                    }
-                                    retrofitService.makepresentationkeyword(presentation_id,map).enqueue(new Callback<MakePresentationECT>() {
-                                        @Override
-                                        public void onResponse(Call<MakePresentationECT> call, Response<MakePresentationECT> response) {
-                                            if (response.isSuccessful() && response.body() != null) {
-                                                Toast.makeText(view.getContext(), "키워드 등록 성공", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                try {
-                                                    Gson gson = new Gson();
-                                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
-                                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        }
-                                        @Override
-                                        public void onFailure(Call<MakePresentationECT> call, Throwable t) {
-                                            Toast.makeText(view.getContext(), "connection is failed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                                if(presentationMakeItem.script !=null){
-                                    Map<String,String> map = new HashMap<>();
-                                    for(int i=0;i<presentationMakeItem.script.size();i++){
-                                        if(!presentationMakeItem.script.get(i).equals(""))
-                                            map.put(Integer.toString(i),presentationMakeItem.script.get(i));
-                                    }
-                                    retrofitService.makepresentationkeyword(presentation_id,map).enqueue(new Callback<MakePresentationECT>() {
-                                        @Override
-                                        public void onResponse(Call<MakePresentationECT> call, Response<MakePresentationECT> response) {
-                                            if (response.isSuccessful() && response.body() != null) {
-                                                Toast.makeText(view.getContext(), "대본 등록 성공", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                try {
-                                                    Gson gson = new Gson();
-                                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
-                                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        }
-                                        @Override
-                                        public void onFailure(Call<MakePresentationECT> call, Throwable t) {
-                                            Toast.makeText(view.getContext(), "connection is failed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-
-
+//                                if(presentationMakeItem.keywords != null) {
+//                                    Map<String,String> map = new HashMap<>();
+//                                    for(int i=0;i<presentationMakeItem.keywords.size();i++){
+//                                        String keyword = "";
+//                                        for(String str : presentationMakeItem.keywords.get(i)){
+//                                            if(!keyword.equals(""))
+//                                                keyword+=",";
+//                                            keyword+=str;
+//                                        }
+//                                        if(!keyword.equals(""))
+//                                            map.put(Integer.toString(i),keyword);
+//                                    }
+//                                    retrofitService.makepresentationkeyword(presentation_id,map).enqueue(new Callback<MakePresentationECT>() {
+//                                        @Override
+//                                        public void onResponse(Call<MakePresentationECT> call, Response<MakePresentationECT> response) {
+//                                            if (response.isSuccessful() && response.body() != null) {
+//                                                Toast.makeText(view.getContext(), "키워드 등록 성공", Toast.LENGTH_SHORT).show();
+//                                            } else {
+//                                                try {
+//                                                    Gson gson = new Gson();
+//                                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+//                                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
+//                                                } catch (IOException e) {
+//                                                    e.printStackTrace();
+//                                                }
+//                                            }
+//                                        }
+//                                        @Override
+//                                        public void onFailure(Call<MakePresentationECT> call, Throwable t) {
+//                                            Toast.makeText(view.getContext(), "connection is failed", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                }
+//                                if(presentationMakeItem.script !=null){
+//                                    Map<String,String> map = new HashMap<>();
+//                                    for(int i=0;i<presentationMakeItem.script.size();i++){
+//                                        if(!presentationMakeItem.script.get(i).equals(""))
+//                                            map.put(Integer.toString(i),presentationMakeItem.script.get(i));
+//                                    }
+//                                    retrofitService.makepresentationscript(presentation_id,map).enqueue(new Callback<MakePresentationECT>() {
+//                                        @Override
+//                                        public void onResponse(Call<MakePresentationECT> call, Response<MakePresentationECT> response) {
+//                                            if (response.isSuccessful() && response.body() != null) {
+//                                                Toast.makeText(view.getContext(), "대본 등록 성공", Toast.LENGTH_SHORT).show();
+//                                            } else {
+//                                                try {
+//                                                    Gson gson = new Gson();
+//                                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+//                                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
+//                                                } catch (IOException e) {
+//                                                    e.printStackTrace();
+//                                                }
+//                                            }
+//                                        }
+//                                        @Override
+//                                        public void onFailure(Call<MakePresentationECT> call, Throwable t) {
+//                                            Toast.makeText(view.getContext(), "connection is failed", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                }
                             }
                             else{
                                 try {
@@ -348,9 +353,7 @@ public class PresentationMakeActivity extends AppCompatActivity {
                             Toast.makeText(view.getContext(),"connection is failed",Toast.LENGTH_SHORT).show();
                         }
                     });
-
                 }
-
             }
         });
 
@@ -385,8 +388,6 @@ public class PresentationMakeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == CODE_FILE && resultCode == RESULT_OK){
             uri = data.getData();
-            String fileUri = uri.getPath().substring(uri.getPath().indexOf(":")+1);
-            file = new File(fileUri);
             filename = getName(uri);
             presentation_make_file_setting.setText("설정완료 "+filename);
             presentation_make_file_setting.setTextColor(getColor(R.color.accent));
@@ -501,5 +502,40 @@ public class PresentationMakeActivity extends AppCompatActivity {
                     '}';
         }
     }
+
+    public static MultipartBody.Part uriToMultipart(final Uri uri, String name,String presentation_id, final ContentResolver contentResolver) {
+        final Cursor c = contentResolver.query(uri, null, null, null, null);
+        if (c != null) {
+            if(c.moveToNext()) {
+                @SuppressLint("Range") final String displayName = c.getString(c.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                RequestBody requestBody = new RequestBody() {
+                    @Override
+                    public MediaType contentType() {
+                        return MediaType.parse(contentResolver.getType(uri));
+                    }
+
+                    @Override
+                    public void writeTo(BufferedSink sink) {
+                        try {
+                            sink.writeAll(Okio.source(contentResolver.openInputStream(uri)));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                c.close();
+                return MultipartBody.Part.createFormData(name, presentation_id+"_"+displayName, requestBody);
+            } else {
+                c.close();
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+
+
+
 
 }
