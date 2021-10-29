@@ -3,6 +3,7 @@ package com.kospeech.speechteacher;
 import android.app.Presentation;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -11,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -61,5 +63,24 @@ public interface RetrofitService {
 
     @GET("presentation/{presentation_id}")
     Call<PresentationItem> getpresentation(@Path("presentation_id") String presentation_id);
+
+
+    @FormUrlEncoded
+    @POST("presentation/")
+    Call<PresentationMakeActivity.MakePresentation> makepresentation(@Field("presentation_title") String presentation_title,
+                                                                     @Field("presentation_time") String presentation_time,
+                                                                     @Field("presentation_date") String presentation_date);
+
+    @Multipart
+    @POST("presentationfile/{presentation_id}")
+    Call<PresentationMakeActivity.MakePresentationFile> makepresentationfile(@Path("presentation_id") String presentation_id , @Part MultipartBody.Part file);
+
+    @FormUrlEncoded
+    @POST("keyword/{presentation_id}")
+    Call<PresentationMakeActivity.MakePresentationECT> makepresentationkeyword(@Path("presentation_id") String presentation_id, @FieldMap Map<String,String> presentationkeyword);
+
+    @FormUrlEncoded
+    @POST("script/{presentation_id}")
+    Call<PresentationMakeActivity.MakePresentationECT> makepresentationscript(@Path("presentation_id") String presentation_id, @FieldMap Map<String,String> presentationscript);
 
 }

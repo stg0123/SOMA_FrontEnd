@@ -20,7 +20,6 @@
         <item name="android:editTextStyle">@style/NotoSansEditTextStyle</item>
         <item name="android:radioButtonStyle">@style/NotoSansRadioButtonStyle</item>
         <item name="android:checkboxStyle">@style/NotoSansCheckboxStyle</item>
-
     </style>
     <style name="Theme.SplashTheme" parent="Theme.SpeechTeacher">
         <item name="android:windowBackground">@drawable/splash</item>
@@ -30,4 +29,15 @@
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">false</item>
     </style>
+    <style name="MySpinnerDatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
+        <!-- 상단 색 변경 -->
+        <item name="colorAccent">@color/primary</item>
+        <!-- 선택한 날짜를 표시할 색상 -->
+        <item name="colorControlActivated">@color/primary</item>
+        <item name="colorControlHighlight">@color/primary</item>
+        <!-- 취소/확인버튼 색상 -->
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+
 </resources>

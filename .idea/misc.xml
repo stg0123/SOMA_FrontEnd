@@ -40,10 +40,12 @@
         <entry key="app/src/main/res/drawable/mini_logo.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/drawable/oval_background.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/oval_background2.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/oval_time_background.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/drawable/pause_ic.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/rectangle_background.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/round_border.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/round_border_primary.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/round_border_primary2.xml" value="0.41333333333333333" />
         <entry key="app/src/main/res/drawable/round_select_border.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/round_select_border2.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/splash.xml" value="0.246875" />
@@ -57,6 +59,8 @@
         <entry key="app/src/main/res/drawable/switch_track_on.xml" value="0.2916666666666667" />
         <entry key="app/src/main/res/drawable/switch_track_selector.xml" value="0.2916666666666667" />
         <entry key="app/src/main/res/font/font_custom.xml" value="0.2609375" />
+        <entry key="app/src/main/res/font/font_custom_digital.xml" value="0.41388888888888886" />
+        <entry key="app/src/main/res/font/font_custom_noto.xml" value="0.41388888888888886" />
         <entry key="app/src/main/res/layout/activity_analysis.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_analysis_detail.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_analysis_loading.xml" value="0.38958333333333334" />
@@ -70,7 +74,8 @@
         <entry key="app/src/main/res/layout/activity_myinfo_update.xml" value="0.38958333333333334" />
         <entry key="app/src/main/res/layout/activity_presentation_make.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_presentation_make_keyword.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/activity_presentation_make_script.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/activity_presentation_make_script.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_presentation_make_time.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_presentation_practice.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_presentation_result_list.xml" value="0.38958333333333334" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.4036458333333333" />

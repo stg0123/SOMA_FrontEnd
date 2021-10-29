@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,31 +21,50 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.listener.OnTapListener;
 import com.github.barteksc.pdfviewer.util.FitPolicy;
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PresentationMakeActivity extends AppCompatActivity {
     ImageButton presentation_make_back;
-    ConstraintLayout presentation_make_file,presentation_make_keyword,presentation_make_script;
-    TextView presentation_make_file_setting,presentation_make_keyword_setting,presentation_make_script_setting;
+    ConstraintLayout presentation_make_file,presentation_make_keyword,presentation_make_script,presentation_make_time,presentation_make_date;
+    TextView presentation_make_file_setting,presentation_make_keyword_setting,presentation_make_script_setting,presentation_make_time_setting,presentation_make_date_setting;
     Button presentation_make_start;
     PDFView presentation_make_presentation;
     View presentation_make_presentation_left,presentation_make_presentation_right;
-
+    EditText presentation_make_title_text;
     private PresentationMakeItem presentationMakeItem;
 
     private Uri uri = null;
-    private static final int CODE_FILE = 1, CODE_KEYWORD=2, CODE_SCRIPT=3;
-
+    private File file = null;
+    private String filename= null;
+    private int mYear,mMonth,mDay;
+    private static final int CODE_FILE = 1, CODE_KEYWORD=2, CODE_SCRIPT=3, CODE_TIME=4;
+    private boolean flag1=false,flag2=false,flag3=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +79,10 @@ public class PresentationMakeActivity extends AppCompatActivity {
 
         presentation_make_keyword_setting = findViewById(R.id.presentation_make_keyword_setting);
         presentation_make_script_setting = findViewById(R.id.presentation_make_script_setting);
+        presentation_make_time_setting = findViewById(R.id.presentation_make_time_setting);
+        presentation_make_date_setting = findViewById(R.id.presentation_make_date_setting);
 
+        presentation_make_title_text = findViewById(R.id.presentation_make_title_text);
         presentation_make_start =findViewById(R.id.presentation_make_start);
 
         presentation_make_back = findViewById(R.id.presentation_make_back);
@@ -157,6 +182,179 @@ public class PresentationMakeActivity extends AppCompatActivity {
             }
         });
 
+        presentation_make_time =findViewById(R.id.presentation_make_time);
+        presentation_make_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), PresentationMakeTimeActivity.class);
+                intent.putExtra("time",presentationMakeItem.time);
+                startActivityForResult(intent, CODE_TIME);
+            }
+        });
+
+        Calendar calendar = Calendar.getInstance();
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MARCH);
+        mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        presentation_make_date = findViewById(R.id.presentation_make_date);
+        presentation_make_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),R.style.MySpinnerDatePickerStyle, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        String date = year+"-"+(month+1)+"-"+day;
+                        presentation_make_date_setting.setText(date);
+                        presentation_make_date_setting.setTextColor(getColor(R.color.accent));
+                        presentationMakeItem.date =date;
+                        mYear =year;
+                        mMonth = month;
+                        mDay =day;
+                    }
+                },mYear,mMonth,mDay);
+                datePickerDialog.show();
+            }
+        });
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
+
+        presentation_make_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(presentation_make_title_text.getText().toString().equals("") || presentationMakeItem.time==null || presentationMakeItem.date == null){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setMessage("발표제목, 발표시간, 발표일은 필수 설정입니다")
+                            .setTitle("설정을 완료해주세요!")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                else{
+                    retrofitService.makepresentation(presentation_make_title_text.getText().toString(),presentationMakeItem.time,presentationMakeItem.date).enqueue(new Callback<MakePresentation>() {
+                        @Override
+                        public void onResponse(Call<MakePresentation> call, Response<MakePresentation> response) {
+                            if(response.isSuccessful() && response.body()!=null){
+                                String presentation_id = response.body().presentation_id;
+                                if(uri != null) {
+                                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/pdf"), file);
+                                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", filename, requestBody);
+
+                                    retrofitService.makepresentationfile(presentation_id, filePart).enqueue(new Callback<MakePresentationFile>() {
+                                        @Override
+                                        public void onResponse(Call<MakePresentationFile> call, Response<MakePresentationFile> response) {
+                                            if (response.isSuccessful() && response.body() != null) {
+                                                Toast.makeText(view.getContext(), "파일 등록 성공", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                try {
+                                                    Gson gson = new Gson();
+                                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<MakePresentationFile> call, Throwable t) {
+                                            Toast.makeText(view.getContext(), "connection is failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                                if(presentationMakeItem.keywords != null) {
+                                    Map<String,String> map = new HashMap<>();
+                                    for(int i=0;i<presentationMakeItem.keywords.size();i++){
+                                        String keyword = "";
+                                        for(String str : presentationMakeItem.keywords.get(i)){
+                                            if(!keyword.equals(""))
+                                                keyword+=",";
+                                            keyword+=str;
+                                        }
+                                        if(!keyword.equals(""))
+                                            map.put(Integer.toString(i),keyword);
+                                    }
+                                    retrofitService.makepresentationkeyword(presentation_id,map).enqueue(new Callback<MakePresentationECT>() {
+                                        @Override
+                                        public void onResponse(Call<MakePresentationECT> call, Response<MakePresentationECT> response) {
+                                            if (response.isSuccessful() && response.body() != null) {
+                                                Toast.makeText(view.getContext(), "키워드 등록 성공", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                try {
+                                                    Gson gson = new Gson();
+                                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<MakePresentationECT> call, Throwable t) {
+                                            Toast.makeText(view.getContext(), "connection is failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                                if(presentationMakeItem.script !=null){
+                                    Map<String,String> map = new HashMap<>();
+                                    for(int i=0;i<presentationMakeItem.script.size();i++){
+                                        if(!presentationMakeItem.script.get(i).equals(""))
+                                            map.put(Integer.toString(i),presentationMakeItem.script.get(i));
+                                    }
+                                    retrofitService.makepresentationkeyword(presentation_id,map).enqueue(new Callback<MakePresentationECT>() {
+                                        @Override
+                                        public void onResponse(Call<MakePresentationECT> call, Response<MakePresentationECT> response) {
+                                            if (response.isSuccessful() && response.body() != null) {
+                                                Toast.makeText(view.getContext(), "대본 등록 성공", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                try {
+                                                    Gson gson = new Gson();
+                                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<MakePresentationECT> call, Throwable t) {
+                                            Toast.makeText(view.getContext(), "connection is failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+
+
+                            }
+                            else{
+                                try {
+                                    Gson gson = new Gson();
+                                    ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                                    Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<MakePresentation> call, Throwable t) {
+                            Toast.makeText(view.getContext(),"connection is failed",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+
+            }
+        });
+
+
 
 
     }
@@ -188,8 +386,9 @@ public class PresentationMakeActivity extends AppCompatActivity {
         if(requestCode == CODE_FILE && resultCode == RESULT_OK){
             uri = data.getData();
             String fileUri = uri.getPath().substring(uri.getPath().indexOf(":")+1);
-            File file = new File(fileUri);
-            presentation_make_file_setting.setText("설정완료 "+getName(uri));
+            file = new File(fileUri);
+            filename = getName(uri);
+            presentation_make_file_setting.setText("설정완료 "+filename);
             presentation_make_file_setting.setTextColor(getColor(R.color.accent));
             presentation_make_presentation.fromUri(uri)
                     .swipeHorizontal(true)
@@ -240,7 +439,11 @@ public class PresentationMakeActivity extends AppCompatActivity {
             presentation_make_script_setting.setText("설정완료");
             presentation_make_script_setting.setTextColor(getColor(R.color.accent));
         }
-
+        else if(requestCode == CODE_TIME && resultCode == RESULT_OK){
+            presentationMakeItem.time = data.getStringExtra("time");
+            presentation_make_time_setting.setText("설정완료");
+            presentation_make_time_setting.setTextColor(getColor(R.color.accent));
+        }
 
 
 
@@ -259,6 +462,44 @@ public class PresentationMakeActivity extends AppCompatActivity {
 
     }
 
+    public class MakePresentation{
+        @SerializedName("message")
+        private String message;
+        @SerializedName("presentation_id")
+        private String presentation_id;
 
+        @Override
+        public String toString() {
+            return "MakePresentation{" +
+                    "message='" + message + '\'' +
+                    ", presentation_id='" + presentation_id + '\'' +
+                    '}';
+        }
+    }
+
+    public class MakePresentationFile{
+        @SerializedName("message")
+        private String message;
+        @SerializedName("file_id")
+        private String file_id;
+
+        @Override
+        public String toString() {
+            return "MakePresentationFile{" +
+                    "message='" + message + '\'' +
+                    ", file_id='" + file_id + '\'' +
+                    '}';
+        }
+    }
+    public class MakePresentationECT{
+        @SerializedName("message")
+        private String message;
+        @Override
+        public String toString() {
+            return "MakePresentationECT{" +
+                    "message='" + message + '\'' +
+                    '}';
+        }
+    }
 
 }
