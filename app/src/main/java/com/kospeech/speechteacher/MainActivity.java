@@ -3,6 +3,7 @@ package com.kospeech.speechteacher;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
     private long backKeyPressed = 0 ;
     private FragmentManager fragmentManager = getSupportFragmentManager();
+    private FragmentTransaction transaction;
     private FragmentPresentation fragmentPresentation = new FragmentPresentation();
     private FragmentMypage fragmentMypage = new FragmentMypage();
     Menu menu;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
 
 
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragmentPresentation).commitAllowingStateLoss();
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
@@ -47,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
     class ItemSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener{
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-
+            transaction = fragmentManager.beginTransaction();
             switch(menuItem.getItemId())
             {
                 case R.id.bottom_presentation:
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                     menu.findItem(R.id.bottom_knowhow).setIcon(R.drawable.ic_knowhow_off);
                     menu.findItem(R.id.bottom_mypage).setIcon(R.drawable.ic_mypage_off);
                     transaction.replace(R.id.fragment_container, fragmentPresentation).commitAllowingStateLoss();
+
                     break;
                 case R.id.bottom_calendar:
                     menuItem.setIcon(R.drawable.ic_calendar_on);
@@ -94,4 +96,5 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
+
 }

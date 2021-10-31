@@ -5,6 +5,7 @@ package com.kospeech.speechteacher;
 import static android.content.ContentValues.TAG;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,9 +41,10 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final int TYPE_ITEM = 1;
     private final int TYPE_FOOTER = 2;
     private Activity activity;
-    public PresentationViewAdapter(ArrayList<PresentationItem> data,Activity curactivity) {
+    private FragmentPresentation fragment;
+    public PresentationViewAdapter(ArrayList<PresentationItem> data,FragmentPresentation curfragment) {
         mData=data;
-        activity = curactivity;
+        fragment = curfragment;
     }
 
 
@@ -159,11 +161,12 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                                         public void onResponse(Call<DeletePresentation> call, Response<DeletePresentation> response) {
                                             if(response.isSuccessful() && response.body()!=null){
                                                 Toast.makeText(view.getContext(),response.body().message, Toast.LENGTH_SHORT).show();
-                                                Intent intent = activity.getIntent();
-                                                activity.finish();
-                                                activity.overridePendingTransition(0,0);
-                                                activity.startActivity(intent);
-                                                activity.overridePendingTransition(0,0);
+                                                fragment.onRefreshFragment();
+//                                                Intent intent = activity.getIntent();
+//                                                activity.finish();
+//                                                activity.overridePendingTransition(0,0);
+//                                                activity.startActivity(intent);
+//                                                activity.overridePendingTransition(0,0);
                                             }
                                             else{
                                                 try {

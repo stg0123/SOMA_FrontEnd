@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +34,8 @@ public class FragmentPresentation extends Fragment {
     PresentationViewAdapter mAdapter;
     ArrayList<PresentationItem> mList;
 
+    private SharedPreferences sharedPreferences;
+    private RetrofitService retrofitService;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,17 +43,23 @@ public class FragmentPresentation extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.presentation_view);
         mList = new ArrayList<>();
-        mAdapter = new PresentationViewAdapter(mList,getActivity());
+        mAdapter = new PresentationViewAdapter(mList,this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext(), RecyclerView.VERTICAL, false));
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
+        sharedPreferences = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
+        onRefreshFragment();
 
+        return view;
+    }
+
+    public void onRefreshFragment(){
         retrofitService.getallpresentation().enqueue(new Callback<List<PresentationItem>>() {
             @Override
             public void onResponse(Call<List<PresentationItem>> call, Response<List<PresentationItem>> response) {
                 if(response.isSuccessful() && response.body()!=null){
+                    mList.clear();
                     mList.addAll(response.body());
                     mAdapter.notifyDataSetChanged();
                 }
@@ -58,7 +67,7 @@ public class FragmentPresentation extends Fragment {
                     try {
                         Gson gson = new Gson();
                         ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
-                        Toast.makeText(view.getContext(), data.message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), data.message, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -71,11 +80,11 @@ public class FragmentPresentation extends Fragment {
                 Toast.makeText(getContext(),"connection is failed",Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-        return view;
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        onRefreshFragment();
+    }
 }
