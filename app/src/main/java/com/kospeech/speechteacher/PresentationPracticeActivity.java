@@ -32,10 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.util.FitPolicy;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -45,6 +47,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -84,10 +88,13 @@ public class PresentationPracticeActivity extends AppCompatActivity {
     private int time=0;
 
     private PresentationItem presentationItem,presentation;
-
+    private List<List<String>> presentation_keyword=null;
+    private List<String> presentation_script =null;
     PDFView practice_presentation_pdf;
 
     View practice_presentation_left,practice_presentation_right;
+    private RetrofitService retrofitService;
+    private String presentation_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,20 +103,23 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         practice_out = findViewById(R.id.practice_out);
         practice_record = findViewById(R.id.practice_record);
         practice_analysis = findViewById(R.id.practice_analysis);
-        practice_script_text = findViewById(R.id.practice_script_text);
 
         file = new File(getExternalFilesDir(null),"record.m4a");
         presentationItem = (PresentationItem) getIntent().getSerializableExtra("presentationItem");
+        presentation_id = presentationItem.getPresentation_id();
 
         practice_presentation_pdf = findViewById(R.id.practice_presentation_pdf);
         practice_presentation_left = findViewById(R.id.practice_presentation_left);
         practice_presentation_right = findViewById(R.id.practice_presentation_right);
 
+        practice_keyword_flexbox = findViewById(R.id.practice_keyword_flexbox);
+        practice_script_text = findViewById(R.id.practice_script_text);
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
+        retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
 
-        retrofitService.getpresentation(presentationItem.getPresentation_id()).enqueue(new Callback<PresentationItem>() {
+        retrofitService.getpresentation(presentation_id).enqueue(new Callback<PresentationItem>() {
             @Override
             public void onResponse(Call<PresentationItem> call, Response<PresentationItem> response) {
                 if(response.isSuccessful() && response.body()!=null) {
@@ -133,23 +143,24 @@ public class PresentationPracticeActivity extends AppCompatActivity {
             }
         });
 
-        practice_keyword_flexbox = findViewById(R.id.practice_keyword_flexbox);
-        String str[] = {"발표","어플리케이션","개인화","아이스크림","강아지"};
-        for(int i=0;i<5;i++){
-            TextView tmp = new TextView(this);
-            tmp.setText(str[i]);
-            tmp.setTextColor(getColor(R.color.primary));
-            tmp.setBackground(getDrawable(R.drawable.round_select_border2));
-            tmp.setTextSize(16);
-            tmp.setPadding(10,15,10,15);
-            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(300,FlexboxLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10,10,10,10);
-            tmp.setLayoutParams(params);
-            tmp.setGravity(Gravity.CENTER);
-            practice_keyword_flexbox.addView(tmp);
-        }
-        practice_script_text.setText("형사피해자는 법률이 정하는 바에 의하여 당해 사건의 재판 절차에서 진술할 수 있다. 대통령은 조국의 평화적 통일을 위한 성실한 의무를 진다. 국무회의는 대통령·국무총리와15인 이상 30인 이하의 국무위원으로 구성한다.\n" +
-                "국회에 제출된 법률안 기타의 의안은 회기중에 의결되지 못한 이유로 폐기되지 아니한다.");
+//        String str[] = {"발표","어플리케이션","개인화","아이스크림","강아지"};
+//        for(int i=0;i<5;i++){
+//            TextView tmp = new TextView(this);
+//            tmp.setText(str[i]);
+//            tmp.setTextColor(getColor(R.color.primary));
+//            tmp.setBackground(getDrawable(R.drawable.round_select_border2));
+//            tmp.setTextSize(16);
+//            tmp.setPadding(10,15,10,15);
+//            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(300,FlexboxLayout.LayoutParams.WRAP_CONTENT);
+//            params.setMargins(10,10,10,10);
+//            tmp.setLayoutParams(params);
+//            tmp.setGravity(Gravity.CENTER);
+//            practice_keyword_flexbox.addView(tmp);
+//        }
+//        practice_script_text.setText("형사피해자는 법률이 정하는 바에 의하여 당해 사건의 재판 절차에서 진술할 수 있다. 대통령은 조국의 평화적 통일을 위한 성실한 의무를 진다. 국무회의는 대통령·국무총리와15인 이상 30인 이하의 국무위원으로 구성한다.\n" +
+//                "국회에 제출된 법률안 기타의 의안은 회기중에 의결되지 못한 이유로 폐기되지 아니한다.");
+
+
 
 
         practice_layout = findViewById(R.id.practice_layout);
@@ -259,10 +270,6 @@ public class PresentationPracticeActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
     }
 
 
@@ -287,6 +294,36 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    public void refreshKeyword(int curpage){
+        practice_keyword_flexbox.removeAllViews();
+        if(presentation_keyword != null){
+            if(!presentation_keyword.get(curpage).isEmpty()) {
+                for (String str : presentation_keyword.get(curpage)) {
+                    TextView tmp = new TextView(this);
+                    tmp.setText(str);
+                    tmp.setTextColor(getColor(R.color.primary));
+                    tmp.setBackground(getDrawable(R.drawable.round_select_border2));
+                    tmp.setTextSize(16);
+                    tmp.setPadding(10, 15, 10, 15);
+                    FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(300, FlexboxLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(10, 10, 10, 10);
+                    tmp.setLayoutParams(params);
+                    tmp.setGravity(Gravity.CENTER);
+                    practice_keyword_flexbox.addView(tmp);
+                }
+            }
+        }
+    }
+
+    public void refreshScript(int curpage){
+        practice_script_text.setText("");
+        if(presentation_script != null){
+            if(!presentation_script.get(curpage).equals(""))
+                practice_script_text.setText(presentation_script.get(curpage));
+        }
+    }
+
 
     public void startanalysis(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -391,8 +428,81 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                     .onPageChange(new OnPageChangeListener() {
                         @Override
                         public void onPageChanged(int page, int pageCount) {
-                            Log.d(TAG, "onPageChanged: "+Integer.toString(page)+" "+Integer.toString(pageCount));
+                            refreshKeyword(page);
+                            refreshScript(page);
                         }
+                    })
+                    .onLoad(new OnLoadCompleteListener() {
+                        @Override
+                        public void loadComplete(int nbPages) {
+                            presentation_keyword = new ArrayList<>();
+                            presentation_script = new ArrayList<>();
+                            for(int i=0;i<nbPages;i++) {
+                                presentation_keyword.add(new ArrayList<>());
+                                presentation_script.add("");
+                            }
+                            retrofitService.getpresentationkeyword(presentation_id).enqueue(new Callback<List<PresentationKeyword>>() {
+                                @Override
+                                public void onResponse(Call<List<PresentationKeyword>> call, Response<List<PresentationKeyword>> response) {
+                                    if(response.isSuccessful() && response.body()!=null){
+                                        List<PresentationKeyword> presentationKeywords = response.body();
+                                        for(int i=0;i<presentationKeywords.size();i++){
+                                            ArrayList<String> keywords_list =new ArrayList<>();
+                                            String[] splitStr = presentationKeywords.get(i).keyword.split(",");
+                                            for(String str : splitStr)
+                                                keywords_list.add(str);
+                                            presentation_keyword.set(presentationKeywords.get(i).keyword_page,keywords_list);
+                                        }
+                                        refreshKeyword(0);
+                                    }
+                                    else{
+                                        try {
+                                            Gson gson = new Gson();
+                                            ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                                            Toast.makeText( getApplicationContext() , data.message, Toast.LENGTH_SHORT).show();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onFailure(Call<List<PresentationKeyword>> call, Throwable t) {
+                                    Log.d(TAG, "onFailure: connection fail");
+                                }
+                            });
+
+                            retrofitService.getpresentationscript(presentation_id).enqueue(new Callback<List<PresentationScript>>() {
+                                @Override
+                                public void onResponse(Call<List<PresentationScript>> call, Response<List<PresentationScript>> response) {
+                                    if(response.isSuccessful() && response.body()!=null){
+                                        List<PresentationScript> presentationScripts = response.body();
+                                        for(int i=0;i<presentationScripts.size();i++){
+                                            presentation_script.set(presentationScripts.get(i).script_page,presentationScripts.get(i).script);
+                                        }
+                                        refreshScript(0);
+                                    }
+                                    else{
+                                        try {
+                                            Gson gson = new Gson();
+                                            ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                                            Toast.makeText( getApplicationContext() , data.message, Toast.LENGTH_SHORT).show();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<PresentationScript>> call, Throwable t) {
+                                    Log.d(TAG, "onFailure: connection fail");
+                                }
+                            });
+
+                        }
+
                     })
                     .load();
 
@@ -410,9 +520,39 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                     practice_presentation_pdf.performPageSnap();
                 }
             });
-
         }
     }
+
+    public class PresentationKeyword{
+        @SerializedName("keyword_page")
+        private int keyword_page;
+        @SerializedName("keyword_contents")
+        private String keyword;
+
+        @Override
+        public String toString() {
+            return "presentationKeyword{" +
+                    "keyword_page=" + keyword_page +
+                    ", keyword='" + keyword + '\'' +
+                    '}';
+        }
+    }
+
+    public class PresentationScript{
+        @SerializedName("script_page")
+        private int script_page;
+        @SerializedName("script_contents")
+        private String script;
+
+        @Override
+        public String toString() {
+            return "presentationScript{" +
+                    "keyword_page=" + script_page +
+                    ", script='" + script + '\'' +
+                    '}';
+        }
+    }
+
 
 
 }

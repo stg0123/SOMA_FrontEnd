@@ -83,4 +83,10 @@ public interface RetrofitService {
     @POST("script/{presentation_id}")
     Call<PresentationMakeActivity.MakePresentationECT> makepresentationscript(@Path("presentation_id") String presentation_id, @FieldMap Map<String,String> presentationscript);
 
+    @GET("keyword/{presentation_id}")
+    Call<List<PresentationPracticeActivity.PresentationKeyword>> getpresentationkeyword(@Path("presentation_id") String presentation_id);
+
+    @GET("script/{presentation_id}")
+    Call<List<PresentationPracticeActivity.PresentationScript>> getpresentationscript(@Path("presentation_id") String presentation_id);
+
 }
