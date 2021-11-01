@@ -75,7 +75,7 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             itemViewHolder.titleView.setText(item.getPresntation_title());
 
 
-            itemViewHolder.numberView.setText(Integer.toString(item.getPresentation_result_info().size())+"회");
+            itemViewHolder.numberView.setText(item.getPresentation_result_info()+"회");
             itemViewHolder.dateView.setText("발표일: "+item.getPresentation_date());
         }
         else{

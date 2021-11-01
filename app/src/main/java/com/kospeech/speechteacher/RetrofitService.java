@@ -89,4 +89,9 @@ public interface RetrofitService {
     @GET("script/{presentation_id}")
     Call<List<PresentationPracticeActivity.PresentationScript>> getpresentationscript(@Path("presentation_id") String presentation_id);
 
+
+
+    @GET("presentationresult/{presentation_id}")
+    Call<List<PresentationResultInfo>> getpresentationresult(@Path("presentation_id") String presentation_id);
+
 }

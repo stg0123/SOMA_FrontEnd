@@ -1,37 +1,53 @@
 package com.kospeech.speechteacher;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PresentationResultListActivity extends AppCompatActivity {
     TextView resultlist_title_text;
-    Button resultlist_to_practice,resultlist_item;
+    Button resultlist_to_practice;
     ImageButton resultlist_back;
     LinearLayout resultlist_list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presentation_result_list);
-        Intent getintent = getIntent();
-        PresentationItem presentationItem = (PresentationItem) getintent.getSerializableExtra("presentationItem");
+        PresentationItem presentationItem = (PresentationItem) getIntent().getSerializableExtra("presentationItem");
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        RetrofitService retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
+
         resultlist_title_text = findViewById(R.id.resultlist_title_text);
         resultlist_title_text.setText(presentationItem.getPresntation_title());
-        resultlist_back = findViewById(R.id.resultlist_back);
-        resultlist_to_practice = findViewById(R.id.resultlist_to_practice);
 
+
+        resultlist_back = findViewById(R.id.resultlist_back);
         resultlist_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,43 +55,62 @@ public class PresentationResultListActivity extends AppCompatActivity {
             }
         });
 
-
+        resultlist_to_practice = findViewById(R.id.resultlist_to_practice);
         resultlist_to_practice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),PresentationPracticeActivity.class);
                 intent.putExtra("presentationItem",presentationItem);
                 startActivity(intent);
-                finish();
+            }
+        });
+
+        resultlist_list = findViewById(R.id.resultlist_list);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        retrofitService.getpresentationresult(presentationItem.getPresentation_id()).enqueue(new Callback<List<PresentationResultInfo>>() {
+            @Override
+            public void onResponse(Call<List<PresentationResultInfo>> call, Response<List<PresentationResultInfo>> response) {
+                if(response.isSuccessful() && response.body()!=null) {
+                    List<PresentationResultInfo> presentationResultInfos=response.body();
+                    for(int i=0;i<presentationResultInfos.size();i++) {
+                        View item = inflater.inflate(R.layout.presentation_result_list_item, null);
+                        Button presentation_result_item = item.findViewById(R.id.presentation_result_item);
+                        String time = presentationResultInfos.get(i).getPresentation_result_date();
+                        presentation_result_item.setText(time.substring(0,10)+" "+time.substring(11,13)+":"+time.substring(14,16));
+                        PresentationResult presentationResult = presentationResultInfos.get(i).getPresentation_result();
+                        presentation_result_item.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(view.getContext(),AnalysisActivity.class);
+                                intent.putExtra("presentationResult",presentationResult);
+                                intent.putExtra("presentationItem",presentationItem);
+                                startActivity(intent);
+                            }
+                        });
+
+                        resultlist_list.addView(item);
+
+                    }
+                }
+                else{
+                    try {
+                        Gson gson = new Gson();
+                        ErrorData data = gson.fromJson(response.errorBody().string(), ErrorData.class);
+                        Toast.makeText( getApplicationContext() , data.message, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PresentationResultInfo>> call, Throwable t) {
+                Log.d(TAG, "onFailure: connection fail");
             }
         });
 
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        resultlist_list = findViewById(R.id.resultlist_list);
-
-        for (List<String> resultItem : presentationItem.getPresentation_result_info()) {
-            View resultItemView = inflater.inflate(R.layout.presentation_result_list_item, null);
-            Button Item = resultItemView.findViewById(R.id.detail_item_bar_count);
-            Item.setText(resultItem.get(1));
-            resultItemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    builder.setMessage(resultItem.get(0))
-                            .setTitle("해당 객체 id")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                }
-            });
-            resultlist_list.addView(resultItemView);
-        }
 
 
 

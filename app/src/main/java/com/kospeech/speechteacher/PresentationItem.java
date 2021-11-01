@@ -21,7 +21,7 @@ public class PresentationItem implements Serializable {
     @SerializedName("presentation_ex_improper")
     private String presentation_ex_improper;
     @SerializedName("presentation_result_info")
-    private List<List<String>> presentation_result_info;
+    private Integer presentation_result_info;
     @SerializedName("presentation_file_url")
     private String presentation_file_url;
 
@@ -53,7 +53,7 @@ public class PresentationItem implements Serializable {
         return presentation_ex_improper;
     }
 
-    public List<List<String>> getPresentation_result_info() {
+    public Integer getPresentation_result_info() {
         return presentation_result_info;
     }
 
