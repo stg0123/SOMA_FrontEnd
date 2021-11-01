@@ -66,6 +66,7 @@
                     android:textColor="@color/textprimary"
                     />
                 <TextView
+                    android:id="@+id/analysis_detail_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -76,6 +77,7 @@
 
             </LinearLayout>
             <TextView
+                android:id="@+id/analysis_detail_explain_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -86,6 +88,7 @@
                 android:textColor="@color/textprimary"
                 />
             <TextView
+                android:id="@+id/analysis_detail_explain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -95,13 +98,14 @@
                 />
 
             <TextView
+                android:id="@+id/analysis_detail_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/round_border_primary"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
-                android:text="항목 검출 내용 : 00개"
+                android:text="항목 검출 개수 : 00개"
                 android:textSize="16dp"
                 android:textColor="@color/textprimary"
                 android:padding="10dp"

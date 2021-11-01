@@ -62,7 +62,7 @@
         <entry key="app/src/main/res/font/font_custom_digital.xml" value="0.41388888888888886" />
         <entry key="app/src/main/res/font/font_custom_noto.xml" value="0.41388888888888886" />
         <entry key="app/src/main/res/layout/activity_analysis.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/activity_analysis_detail.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/activity_analysis_detail.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_analysis_loading.xml" value="0.38958333333333334" />
         <entry key="app/src/main/res/layout/activity_fragment_mypage.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_fragment_presentation.xml" value="0.375" />
@@ -74,7 +74,7 @@
         <entry key="app/src/main/res/layout/activity_myinfo_update.xml" value="0.38958333333333334" />
         <entry key="app/src/main/res/layout/activity_presentation_make.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_presentation_make_keyword.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/activity_presentation_make_script.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_presentation_make_script.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_presentation_make_time.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_presentation_practice.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_presentation_result_list.xml" value="0.38958333333333334" />

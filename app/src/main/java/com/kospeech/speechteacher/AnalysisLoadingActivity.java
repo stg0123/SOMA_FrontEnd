@@ -33,13 +33,11 @@ public class AnalysisLoadingActivity extends AppCompatActivity {
     private File file;
     private RetrofitService retrofitService;
     LinearLayout analysis_loading;
-    TextView analysis_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analysis_loading);
-        analysis_text = findViewById(R.id.analysis_text);
         analysis_loading = findViewById(R.id.analysis_loading);
         file = new File(getExternalFilesDir(null),"record.m4a");
         SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
@@ -48,7 +46,7 @@ public class AnalysisLoadingActivity extends AppCompatActivity {
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("audio/m4a"), file);
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", "record.m4a", requestBody);
-        retrofitService.presentationresult(filePart).enqueue(new Callback<PresentationResult>() {
+        retrofitService.presentationresult(getIntent().getStringExtra("presentation_id"),filePart).enqueue(new Callback<PresentationResult>() {
             @Override
             public void onResponse(Call<PresentationResult> call, Response<PresentationResult> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -76,7 +74,9 @@ public class AnalysisLoadingActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure: connection fail");
             }
         });
+    }
 
-
+    @Override
+    public void onBackPressed() {
     }
 }

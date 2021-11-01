@@ -68,6 +68,7 @@ public class PresentationMakeKeywordActivity extends AppCompatActivity {
                 editText.setBackground(null);
                 editText.setHint("키워드를 입력해주세요");
                 editText.setHintTextColor(getColor(R.color.textprimaryinverse));
+                editText.setTextColor(getColor(R.color.textprimary));
                 editText.setSingleLine(true);
                 editText.setTextSize(24);
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());

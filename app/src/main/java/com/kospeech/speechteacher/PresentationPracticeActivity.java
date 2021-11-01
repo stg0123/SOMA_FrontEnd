@@ -345,6 +345,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                             Intent intent = new Intent(view.getContext(),AnalysisLoadingActivity.class);
                             intent.putExtra("presentationItem",presentationItem);
                             intent.putExtra("practice_time",time);
+                            intent.putExtra("presentation_id",presentation_id);
                             view.getContext().startActivity(intent);
                             finish();
 

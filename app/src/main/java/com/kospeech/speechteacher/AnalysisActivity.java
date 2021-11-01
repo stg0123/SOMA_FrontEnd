@@ -2,9 +2,11 @@ package com.kospeech.speechteacher;
 
 import static java.lang.Math.max;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -50,7 +52,7 @@ public class AnalysisActivity extends AppCompatActivity {
         analysis_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                onBackPressed();
             }
         });
 
@@ -58,7 +60,7 @@ public class AnalysisActivity extends AppCompatActivity {
         analysis_presentation_time = findViewById(R.id.analysis_presentation_time);
         analysis_practice_time.setText(Integer.toString((int)(practice_time/60)) +"분 "+Integer.toString((int)(practice_time%60))+"초" );
         String presentation_time = presentationItem.getPresentation_time();
-        analysis_presentation_time.setText(presentation_time.substring(0,2)+"시 "+presentation_time.substring(3,5)+"분 00초");
+        analysis_presentation_time.setText(presentation_time.substring(0,2)+"분 "+presentation_time.substring(3,5)+"초");
 
         analysis_dupword_status =findViewById(R.id.analysis_dupword_status);
         analysis_unsuitable_status =findViewById(R.id.analysis_unsuitable_status);
@@ -145,11 +147,17 @@ public class AnalysisActivity extends AppCompatActivity {
 
         analysis_radar = findViewById(R.id.analysis_radar);
         ArrayList<RadarEntry> visitors = new ArrayList<>();
-        visitors.add(new RadarEntry(max(10 - presentationResult.getDuplicatedWords().size(),0)));
-        visitors.add(new RadarEntry(max(10 - presentationResult.getUnsuitableWords().size(),0)));
-        visitors.add(new RadarEntry(max(10 - presentationResult.getGap().size(),0)));
-        visitors.add(new RadarEntry(max(10 - presentationResult.getTune().size(),0)));
-        visitors.add(new RadarEntry(max(11 - presentationResult.getSpeed().size(),0)));
+        int point;
+        point = max(12-presentationResult.getDuplicatedWords().size(),0);
+        visitors.add(new RadarEntry(point));
+        point = max(12-presentationResult.getUnsuitableWords().size(),0);
+        visitors.add(new RadarEntry(point));
+        point = max(12-presentationResult.getGap().size(),0);
+        visitors.add(new RadarEntry(point));
+        point = max(12-presentationResult.getTune().size(),0);
+        visitors.add(new RadarEntry(point));
+        point = max(12-presentationResult.getSpeed().size(),0);
+        visitors.add(new RadarEntry(point));
         visitors.add(new RadarEntry(10));
 
         RadarDataSet radarDataSet = new RadarDataSet(visitors,"visitors");
@@ -167,12 +175,34 @@ public class AnalysisActivity extends AppCompatActivity {
         String[] labels = {"중복단어","부적절단어","뜸들이기","음정변화","빠르기","Filler Words"};
         analysis_radar.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
         analysis_radar.getLegend().setEnabled(false);
+        analysis_radar.getYAxis().setAxisMinimum(0);
         analysis_radar.getYAxis().setEnabled(false);
         analysis_radar.getDescription().setEnabled(false);
         analysis_radar.setRotationEnabled(false);
         analysis_radar.setData(radarData);
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("발표 결과 화면을 종료합니다.")
+                .setTitle("발표 결과 화면 끄기")
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
 
 
 

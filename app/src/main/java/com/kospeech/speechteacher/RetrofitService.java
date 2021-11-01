@@ -58,8 +58,8 @@ public interface RetrofitService {
     Call<PresentationViewAdapter.DeletePresentation> deletepresentation(@Path("presentation_id") String presentation_id);
 
     @Multipart
-    @POST("presentationresulttest/")
-    Call<PresentationResult> presentationresult(@Part MultipartBody.Part file);
+    @POST("presentationresult/{presentation_id}")
+    Call<PresentationResult> presentationresult(@Path("presentation_id") String presentation_id ,@Part MultipartBody.Part file);
 
     @GET("presentation/{presentation_id}")
     Call<PresentationItem> getpresentation(@Path("presentation_id") String presentation_id);

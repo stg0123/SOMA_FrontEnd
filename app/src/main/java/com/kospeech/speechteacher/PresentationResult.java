@@ -12,11 +12,11 @@ public class PresentationResult implements Serializable {
     @SerializedName("unsuitableWords")
     private Map<String, List<String>> unsuitableWords;
     @SerializedName("gap")
-    private List<List<Float>> gap;
+    private List<List<Integer>> gap;
     @SerializedName("tune")
-    private List<Float> tune;
+    private List<Integer> tune;
     @SerializedName("speed")
-    private List<List<Float>> speed;
+    private List<List<Integer>> speed;
 
     public Map<String, Integer> getDuplicatedWords() {
         return duplicatedWords;
@@ -26,15 +26,15 @@ public class PresentationResult implements Serializable {
         return unsuitableWords;
     }
 
-    public List<List<Float>> getGap() {
+    public List<List<Integer>> getGap() {
         return gap;
     }
 
-    public List<Float> getTune() {
+    public List<Integer> getTune() {
         return tune;
     }
 
-    public List<List<Float>> getSpeed() {
+    public List<List<Integer>> getSpeed() {
         return speed;
     }
 
