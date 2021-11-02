@@ -1,12 +1,19 @@
 package com.kospeech.speechteacher;
 
+import static android.content.ContentValues.TAG;
+
+import static java.lang.Math.max;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -16,6 +23,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,7 +38,9 @@ public class AnalysisDetailActivity extends AppCompatActivity {
     TextView analysis_detail_content,analysis_detail_explain_title,analysis_detail_explain,analysis_detail_count;
 
     private PresentationResult presentationResult;
+    private String audiofile_url;
     private int kind;
+    private MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +50,23 @@ public class AnalysisDetailActivity extends AppCompatActivity {
         analysis_detail_itemlist = findViewById(R.id.analysis_detail_itemlist);
         Intent intent = getIntent();
         presentationResult = (PresentationResult) intent.getSerializableExtra("presentationResult");
+        audiofile_url = intent.getStringExtra("audiofile_url");
         kind = intent.getIntExtra("kind",0);
+
+        mediaPlayer = new MediaPlayer();
+
+        if(audiofile_url == null)
+            audiofile_url = getExternalFilesDir(null) + "/record.m4a";
+
+        Log.d(TAG, "onCreate: "+audiofile_url);
+
+        try {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(audiofile_url);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -171,6 +198,7 @@ public class AnalysisDetailActivity extends AppCompatActivity {
             for (int i=0;i<gap.size();i++){
                 View item = inflater.inflate(R.layout.analysis_detail_item_link,null);
                 TextView detail_item_link_text = item.findViewById(R.id.detail_item_link_text);
+                int start = max(gap.get(i).get(0)-1,0);
                 String second = gap.get(i).get(0).toString()+"~"+gap.get(i).get(1).toString()+"초";
                 detail_item_link_text.setText(second);
                 String number = String.valueOf(i+1);
@@ -182,12 +210,16 @@ public class AnalysisDetailActivity extends AppCompatActivity {
                 item.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        mediaPlayer.seekTo(start*1000);
+                        mediaPlayer.start();
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setMessage("다시듣기 기능을 준비중입니다.")
-                                .setTitle("준비중입니다")
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        builder.setMessage("해당구간 -1초부터 다시 듣습니다")
+                                .setTitle("발표연습 다시듣기")
+                                .setPositiveButton("종료", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        mediaPlayer.pause();
                                         dialogInterface.cancel();
                                     }
                                 });
@@ -211,6 +243,7 @@ public class AnalysisDetailActivity extends AppCompatActivity {
             for (int i=0;i<tune.size();i++){
                 View item = inflater.inflate(R.layout.analysis_detail_item_link,null);
                 TextView detail_item_link_text = item.findViewById(R.id.detail_item_link_text);
+                int start = max(tune.get(i)-1,0);
                 detail_item_link_text.setText(tune.get(i).toString()+"초");
                 String number = String.valueOf(i+1);
                 if(i<9)
@@ -221,12 +254,15 @@ public class AnalysisDetailActivity extends AppCompatActivity {
                 item.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mediaPlayer.seekTo(start*1000);
+                        mediaPlayer.start();
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setMessage("다시듣기 기능을 준비중입니다.")
-                                .setTitle("준비중입니다")
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        builder.setMessage("해당구간 -1초부터 다시 듣습니다")
+                                .setTitle("발표연습 다시듣기")
+                                .setPositiveButton("종료", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        mediaPlayer.pause();
                                         dialogInterface.cancel();
                                     }
                                 });
@@ -248,6 +284,7 @@ public class AnalysisDetailActivity extends AppCompatActivity {
             for (int i=0;i<speed.size();i++){
                 View item = inflater.inflate(R.layout.analysis_detail_item_link,null);
                 TextView detail_item_link_text = item.findViewById(R.id.detail_item_link_text);
+                int start = max(speed.get(i).get(0)-1,0);
                 String second = speed.get(i).get(0).toString()+"초 ";
                 if(speed.get(i).get(1).equals(0))
                     second +="(빠름)";
@@ -264,12 +301,15 @@ public class AnalysisDetailActivity extends AppCompatActivity {
                 item.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mediaPlayer.seekTo(start*1000);
+                        mediaPlayer.start();
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setMessage("다시듣기 기능을 준비중입니다.")
-                                .setTitle("준비중입니다")
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        builder.setMessage("해당구간 -1초부터 다시 듣습니다")
+                                .setTitle("발표연습 다시듣기")
+                                .setPositiveButton("종료", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        mediaPlayer.pause();
                                         dialogInterface.cancel();
                                     }
                                 });

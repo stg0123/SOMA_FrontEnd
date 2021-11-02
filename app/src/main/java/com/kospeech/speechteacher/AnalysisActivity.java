@@ -39,6 +39,7 @@ public class AnalysisActivity extends AppCompatActivity {
     LinearLayout analysis_dupword,analysis_unsuitable,analysis_gap,analysis_tune,analysis_speed,analysis_fillerwords;
     private PresentationResult presentationResult;
     private PresentationItem presentationItem;
+    private String audiofile_url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +47,7 @@ public class AnalysisActivity extends AppCompatActivity {
         Intent intent = getIntent();
         presentationResult = (PresentationResult) intent.getSerializableExtra("presentationResult");
         presentationItem = (PresentationItem) intent.getSerializableExtra("presentationItem");
+        audiofile_url = intent.getStringExtra("audiofile_url");
         int practice_time = intent.getIntExtra("practice_time",0);
 
         analysis_back = findViewById(R.id.analysis_back);
@@ -111,6 +113,7 @@ public class AnalysisActivity extends AppCompatActivity {
                     Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
                     detailintent.putExtra("kind",3);
                     detailintent.putExtra("presentationResult",presentationResult);
+                    detailintent.putExtra("audiofile_url",audiofile_url);
                     startActivity(detailintent);
                 }
             });
@@ -124,6 +127,7 @@ public class AnalysisActivity extends AppCompatActivity {
                     Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
                     detailintent.putExtra("kind",4);
                     detailintent.putExtra("presentationResult",presentationResult);
+                    detailintent.putExtra("audiofile_url",audiofile_url);
                     startActivity(detailintent);
                 }
             });
@@ -137,6 +141,7 @@ public class AnalysisActivity extends AppCompatActivity {
                     Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
                     detailintent.putExtra("kind",5);
                     detailintent.putExtra("presentationResult",presentationResult);
+                    detailintent.putExtra("audiofile_url",audiofile_url);
                     startActivity(detailintent);
                 }
             });

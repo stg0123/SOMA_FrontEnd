@@ -79,12 +79,14 @@ public class PresentationResultListActivity extends AppCompatActivity {
                         String time = presentationResultInfos.get(i).getPresentation_result_date();
                         presentation_result_item.setText(time.substring(0,10)+" "+time.substring(11,13)+":"+time.substring(14,16));
                         PresentationResult presentationResult = presentationResultInfos.get(i).getPresentation_result();
+                        String audiofile_url = presentationResultInfos.get(i).getAudiofile_url();
                         presentation_result_item.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(view.getContext(),AnalysisActivity.class);
                                 intent.putExtra("presentationResult",presentationResult);
                                 intent.putExtra("presentationItem",presentationItem);
+                                intent.putExtra("audiofile_url",audiofile_url);
                                 startActivity(intent);
                             }
                         });
