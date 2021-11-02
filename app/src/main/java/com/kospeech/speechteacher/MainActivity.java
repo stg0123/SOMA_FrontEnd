@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private FragmentTransaction transaction;
     private FragmentPresentation fragmentPresentation = new FragmentPresentation();
     private FragmentMypage fragmentMypage = new FragmentMypage();
+    private FragmentCalendar fragmentCalendar = new FragmentCalendar();
+    private FragmentKnowhow fragmentKnowhow = new FragmentKnowhow();
     Menu menu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +67,14 @@ public class MainActivity extends AppCompatActivity {
                     menu.findItem(R.id.bottom_presentation).setIcon(R.drawable.ic_mic_off);
                     menu.findItem(R.id.bottom_knowhow).setIcon(R.drawable.ic_knowhow_off);
                     menu.findItem(R.id.bottom_mypage).setIcon(R.drawable.ic_mypage_off);
-                    transaction.replace(R.id.fragment_container, fragmentPresentation).commitAllowingStateLoss();
+                    transaction.replace(R.id.fragment_container, fragmentCalendar).commitAllowingStateLoss();
                     break;
                 case R.id.bottom_knowhow:
                     menuItem.setIcon(R.drawable.ic_knowhow_on);
                     menu.findItem(R.id.bottom_presentation).setIcon(R.drawable.ic_mic_off);
                     menu.findItem(R.id.bottom_calendar).setIcon(R.drawable.ic_calendar_off);
                     menu.findItem(R.id.bottom_mypage).setIcon(R.drawable.ic_mypage_off);
-                    transaction.replace(R.id.fragment_container, fragmentPresentation).commitAllowingStateLoss();
+                    transaction.replace(R.id.fragment_container, fragmentKnowhow).commitAllowingStateLoss();
                     break;
                 case R.id.bottom_mypage:
                     menuItem.setIcon(R.drawable.ic_mypage_on);
