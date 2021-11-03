@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -33,7 +34,9 @@ public class AnalysisLoadingActivity extends AppCompatActivity {
     private File file;
     private RetrofitService retrofitService;
     LinearLayout analysis_loading;
-
+    private int practice_time;
+    private int resultlistsize;
+    private String presentation_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,17 +45,23 @@ public class AnalysisLoadingActivity extends AppCompatActivity {
         file = new File(getExternalFilesDir(null),"record.m4a");
         SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
-
+        practice_time = getIntent().getIntExtra("practice_time",0);
+        resultlistsize = getIntent().getIntExtra("resultlistsize",0);
+        presentation_id = getIntent().getStringExtra("presentation_id");
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("audio/m4a"), file);
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", "record.m4a", requestBody);
-        retrofitService.presentationresult(getIntent().getStringExtra("presentation_id"),filePart).enqueue(new Callback<PresentationResult>() {
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio_file", presentation_id+"_"+(resultlistsize+1)+"_"+"record.m4a", requestBody);
+
+        RequestBody presentation_result_time = RequestBody.create(MediaType.parse("text/plain"),String.valueOf(practice_time));
+        HashMap<String,RequestBody> data = new HashMap<>();
+        data.put("presentation_result_time",presentation_result_time);
+        retrofitService.presentationresult(presentation_id,filePart,data).enqueue(new Callback<PresentationResult>() {
             @Override
             public void onResponse(Call<PresentationResult> call, Response<PresentationResult> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Intent intent = new Intent(getApplicationContext(),AnalysisActivity.class);
                     intent.putExtra("presentationResult",response.body());
-                    intent.putExtra("practice_time",getIntent().getIntExtra("practice_time",0));
+                    intent.putExtra("practice_time",practice_time);
                     intent.putExtra("presentationItem",getIntent().getSerializableExtra("presentationItem"));
                     startActivity(intent);
                     Log.d(TAG, "onResponse: "+response.body().toString());

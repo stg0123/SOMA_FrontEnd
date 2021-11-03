@@ -95,7 +95,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
     View practice_presentation_left,practice_presentation_right;
     private RetrofitService retrofitService;
     private String presentation_id;
-
+    private int resultlistsize;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +107,8 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         file = new File(getExternalFilesDir(null),"record.m4a");
         presentationItem = (PresentationItem) getIntent().getSerializableExtra("presentationItem");
         presentation_id = presentationItem.getPresentation_id();
+
+        resultlistsize = getIntent().getIntExtra("resultlistsize",0);
 
         practice_presentation_pdf = findViewById(R.id.practice_presentation_pdf);
         practice_presentation_left = findViewById(R.id.practice_presentation_left);
@@ -346,6 +348,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                             intent.putExtra("presentationItem",presentationItem);
                             intent.putExtra("practice_time",time);
                             intent.putExtra("presentation_id",presentation_id);
+                            intent.putExtra("resultlistsize",resultlistsize);
                             view.getContext().startActivity(intent);
                             finish();
 

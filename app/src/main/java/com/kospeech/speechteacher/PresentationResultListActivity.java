@@ -33,6 +33,7 @@ public class PresentationResultListActivity extends AppCompatActivity {
     Button resultlist_to_practice;
     ImageButton resultlist_back;
     LinearLayout resultlist_list;
+    private int resultlistsize;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,16 +56,6 @@ public class PresentationResultListActivity extends AppCompatActivity {
             }
         });
 
-        resultlist_to_practice = findViewById(R.id.resultlist_to_practice);
-        resultlist_to_practice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),PresentationPracticeActivity.class);
-                intent.putExtra("presentationItem",presentationItem);
-                startActivity(intent);
-            }
-        });
-
         resultlist_list = findViewById(R.id.resultlist_list);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -73,13 +64,17 @@ public class PresentationResultListActivity extends AppCompatActivity {
             public void onResponse(Call<List<PresentationResultInfo>> call, Response<List<PresentationResultInfo>> response) {
                 if(response.isSuccessful() && response.body()!=null) {
                     List<PresentationResultInfo> presentationResultInfos=response.body();
+                    resultlistsize = presentationResultInfos.size();
                     for(int i=0;i<presentationResultInfos.size();i++) {
                         View item = inflater.inflate(R.layout.presentation_result_list_item, null);
                         Button presentation_result_item = item.findViewById(R.id.presentation_result_item);
                         String time = presentationResultInfos.get(i).getPresentation_result_date();
                         presentation_result_item.setText(time.substring(0,10)+" "+time.substring(11,13)+":"+time.substring(14,16));
+
                         PresentationResult presentationResult = presentationResultInfos.get(i).getPresentation_result();
                         String audiofile_url = presentationResultInfos.get(i).getAudiofile_url();
+                        int practice_time = presentationResultInfos.get(i).getPresentation_result_time();
+
                         presentation_result_item.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -87,6 +82,7 @@ public class PresentationResultListActivity extends AppCompatActivity {
                                 intent.putExtra("presentationResult",presentationResult);
                                 intent.putExtra("presentationItem",presentationItem);
                                 intent.putExtra("audiofile_url",audiofile_url);
+                                intent.putExtra("practice_time",practice_time);
                                 startActivity(intent);
                             }
                         });
@@ -113,6 +109,17 @@ public class PresentationResultListActivity extends AppCompatActivity {
         });
 
 
+
+        resultlist_to_practice = findViewById(R.id.resultlist_to_practice);
+        resultlist_to_practice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),PresentationPracticeActivity.class);
+                intent.putExtra("presentationItem",presentationItem);
+                intent.putExtra("resultlistsize",resultlistsize);
+                startActivity(intent);
+            }
+        });
 
 
 

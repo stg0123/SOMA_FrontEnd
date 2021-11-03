@@ -81,71 +81,91 @@ public class AnalysisActivity extends AppCompatActivity {
         if(!presentationResult.getDuplicatedWords().isEmpty()){
             analysis_dupword_status.setText("검출");
             analysis_dupword_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
-            analysis_dupword.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
-                    detailintent.putExtra("kind",1);
-                    detailintent.putExtra("presentationResult",presentationResult);
-                    startActivity(detailintent);
-                }
-            });
         }
+        analysis_dupword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                detailintent.putExtra("kind",1);
+                detailintent.putExtra("presentationResult",presentationResult);
+                startActivity(detailintent);
+            }
+        });
+
         if(!presentationResult.getUnsuitableWords().isEmpty()){
             analysis_unsuitable_status.setText("검출");
             analysis_unsuitable_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
-            analysis_unsuitable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
-                    detailintent.putExtra("kind",2);
-                    detailintent.putExtra("presentationResult",presentationResult);
-                    startActivity(detailintent);
-                }
-            });
         }
+        analysis_unsuitable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                detailintent.putExtra("kind",2);
+                detailintent.putExtra("presentationResult",presentationResult);
+                startActivity(detailintent);
+            }
+        });
+
         if(!presentationResult.getGap().isEmpty()){
             analysis_gap_status.setText("검출");
             analysis_gap_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
-            analysis_gap.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
-                    detailintent.putExtra("kind",3);
-                    detailintent.putExtra("presentationResult",presentationResult);
-                    detailintent.putExtra("audiofile_url",audiofile_url);
-                    startActivity(detailintent);
-                }
-            });
         }
+        analysis_gap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                detailintent.putExtra("kind",3);
+                detailintent.putExtra("presentationResult",presentationResult);
+                detailintent.putExtra("audiofile_url",audiofile_url);
+                startActivity(detailintent);
+            }
+        });
+
         if(!presentationResult.getTune().isEmpty()){
             analysis_tune_status.setText("검출");
             analysis_tune_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
-            analysis_tune.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
-                    detailintent.putExtra("kind",4);
-                    detailintent.putExtra("presentationResult",presentationResult);
-                    detailintent.putExtra("audiofile_url",audiofile_url);
-                    startActivity(detailintent);
-                }
-            });
         }
+        analysis_tune.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                detailintent.putExtra("kind",4);
+                detailintent.putExtra("presentationResult",presentationResult);
+                detailintent.putExtra("audiofile_url",audiofile_url);
+                startActivity(detailintent);
+            }
+        });
+
         if(!presentationResult.getSpeed().isEmpty()){
             analysis_speed_status.setText("검출");
             analysis_speed_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
-            analysis_speed.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
-                    detailintent.putExtra("kind",5);
-                    detailintent.putExtra("presentationResult",presentationResult);
-                    detailintent.putExtra("audiofile_url",audiofile_url);
-                    startActivity(detailintent);
-                }
-            });
         }
+        analysis_speed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                detailintent.putExtra("kind",5);
+                detailintent.putExtra("presentationResult",presentationResult);
+                detailintent.putExtra("audiofile_url",audiofile_url);
+                startActivity(detailintent);
+            }
+        });
+
+        if(!presentationResult.getFillerWords().isEmpty()){
+            analysis_fillerwords_status.setText("검출");
+            analysis_fillerwords_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
+        }
+        analysis_fillerwords.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailintent = new Intent(view.getContext(),AnalysisDetailActivity.class);
+                detailintent.putExtra("kind",6);
+                detailintent.putExtra("presentationResult",presentationResult);
+                detailintent.putExtra("audiofile_url",audiofile_url);
+                startActivity(detailintent);
+            }
+        });
+
 
 
 
@@ -163,7 +183,8 @@ public class AnalysisActivity extends AppCompatActivity {
         visitors.add(new RadarEntry(point));
         point = max(12-presentationResult.getSpeed().size(),0);
         visitors.add(new RadarEntry(point));
-        visitors.add(new RadarEntry(10));
+        point = max(12-presentationResult.getFillerWords().size(),0);
+        visitors.add(new RadarEntry(point));
 
         RadarDataSet radarDataSet = new RadarDataSet(visitors,"visitors");
         radarDataSet.setColor(getColor(R.color.primary));

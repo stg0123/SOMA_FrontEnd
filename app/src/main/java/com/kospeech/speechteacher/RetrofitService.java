@@ -2,6 +2,7 @@ package com.kospeech.speechteacher;
 
 import android.app.Presentation;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,9 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface RetrofitService {
     @GET("/")
@@ -59,7 +62,7 @@ public interface RetrofitService {
 
     @Multipart
     @POST("presentationresult/{presentation_id}")
-    Call<PresentationResult> presentationresult(@Path("presentation_id") String presentation_id ,@Part MultipartBody.Part file);
+    Call<PresentationResult> presentationresult(@Path("presentation_id") String presentation_id , @Part MultipartBody.Part file, @PartMap HashMap<String,RequestBody> data);
 
     @GET("presentation/{presentation_id}")
     Call<PresentationItem> getpresentation(@Path("presentation_id") String presentation_id);

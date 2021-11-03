@@ -17,6 +17,12 @@ public class PresentationResult implements Serializable {
     private List<Integer> tune;
     @SerializedName("speed")
     private List<List<Integer>> speed;
+    @SerializedName("fillerWords")
+    private Map<String,List<Integer>> fillerWords;
+
+    public Map<String, List<Integer>> getFillerWords() {
+        return fillerWords;
+    }
 
     public Map<String, Integer> getDuplicatedWords() {
         return duplicatedWords;
