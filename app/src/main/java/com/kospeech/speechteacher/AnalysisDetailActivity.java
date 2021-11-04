@@ -352,19 +352,49 @@ public class AnalysisDetailActivity extends AppCompatActivity {
                 fillerwordslist.add(i);
             }
 
-
             if (fillerwordslist.isEmpty()) {
                 analysis_detail_count.setText("검출 내용이 없습니다");
-            }else{
+            }else {
                 analysis_detail_count.setText("filler words 검출 개수 : " + fillerwordslist.size() + "개");
-                TextView item =new TextView(this);
-                item.setText(fillerWords.toString());
-                analysis_detail_itemlist.addView(item);
+                List<Integer> fillerwordslist2 = new ArrayList<>(fillerwordslist);
+                Collections.sort(fillerwordslist2);
+                int i=0;
+                for (Integer f_i : fillerwordslist2) {
+                    View item = inflater.inflate(R.layout.analysis_detail_item_link, null);
+                    TextView detail_item_link_text = item.findViewById(R.id.detail_item_link_text);
+                    int start = max(f_i - 1, 0);
+                    String second = f_i + "초 ";
+                    detail_item_link_text.setText(second);
 
+                    String number = String.valueOf(i + 1);
+                    if (i < 9)
+                        number = "0" + number;
+                    TextView detail_item_link_num = item.findViewById(R.id.detail_item_link_num);
+                    detail_item_link_num.setText(number + ".");
+
+                    item.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mediaPlayer.seekTo(start * 1000);
+                            mediaPlayer.start();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                            builder.setMessage("해당구간 -1초부터 다시 듣습니다")
+                                    .setTitle("발표연습 다시듣기")
+                                    .setPositiveButton("종료", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            mediaPlayer.pause();
+                                            dialogInterface.cancel();
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+                    });
+                    item.setPadding(0, 30, 0, 30);
+                    analysis_detail_itemlist.addView(item);
+                }
             }
-
-
-
         }
 
 

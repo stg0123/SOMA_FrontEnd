@@ -97,4 +97,8 @@ public interface RetrofitService {
     @GET("presentationresult/{presentation_id}")
     Call<List<PresentationResultInfo>> getpresentationresult(@Path("presentation_id") String presentation_id);
 
+    @GET("knowhow/")
+    Call<List<KnowhowItem>> getknowhow();
+
+
 }
