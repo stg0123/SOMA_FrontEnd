@@ -28,8 +28,10 @@ import org.w3c.dom.Text;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AnalysisActivity extends AppCompatActivity {
     ImageButton analysis_back;
@@ -40,6 +42,8 @@ public class AnalysisActivity extends AppCompatActivity {
     private PresentationResult presentationResult;
     private PresentationItem presentationItem;
     private String audiofile_url;
+    private int count=0;
+    TextView analysis_grade;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +83,7 @@ public class AnalysisActivity extends AppCompatActivity {
         analysis_fillerwords = findViewById(R.id.analysis_fillerwords);
 
         if(!presentationResult.getDuplicatedWords().isEmpty()){
+            count += presentationResult.getDuplicatedWords().size();
             analysis_dupword_status.setText("검출");
             analysis_dupword_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
         }
@@ -93,6 +98,7 @@ public class AnalysisActivity extends AppCompatActivity {
         });
 
         if(!presentationResult.getUnsuitableWords().isEmpty()){
+            count += presentationResult.getUnsuitableWords().size();
             analysis_unsuitable_status.setText("검출");
             analysis_unsuitable_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
         }
@@ -107,6 +113,7 @@ public class AnalysisActivity extends AppCompatActivity {
         });
 
         if(!presentationResult.getGap().isEmpty()){
+            count += presentationResult.getGap().size();
             analysis_gap_status.setText("검출");
             analysis_gap_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
         }
@@ -122,6 +129,7 @@ public class AnalysisActivity extends AppCompatActivity {
         });
 
         if(!presentationResult.getTune().isEmpty()){
+            count += presentationResult.getTune().size();
             analysis_tune_status.setText("검출");
             analysis_tune_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
         }
@@ -137,6 +145,7 @@ public class AnalysisActivity extends AppCompatActivity {
         });
 
         if(!presentationResult.getSpeed().isEmpty()){
+            count += presentationResult.getSpeed().size();
             analysis_speed_status.setText("검출");
             analysis_speed_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
         }
@@ -150,8 +159,20 @@ public class AnalysisActivity extends AppCompatActivity {
                 startActivity(detailintent);
             }
         });
+        Map<String,List<Integer>> fillerWords = presentationResult.getFillerWords();
+        Set<Integer> fillerwordslist = new HashSet<>();
+        for(Integer i : fillerWords.get("음")){
+            fillerwordslist.add(i);
+        }
+        for(Integer i : fillerWords.get("어")){
+            fillerwordslist.add(i);
+        }
+        for(Integer i : fillerWords.get("그")){
+            fillerwordslist.add(i);
+        }
 
-        if(!presentationResult.getFillerWords().isEmpty()){
+        if(!fillerwordslist.isEmpty()){
+            count += fillerwordslist.size();
             analysis_fillerwords_status.setText("검출");
             analysis_fillerwords_status.setBackground(getDrawable(R.drawable.analysis_status_bad));
         }
@@ -207,6 +228,12 @@ public class AnalysisActivity extends AppCompatActivity {
         analysis_radar.setRotationEnabled(false);
         analysis_radar.setData(radarData);
 
+
+        analysis_grade = findViewById(R.id.analysis_grade);
+        if(count <5)
+            analysis_grade.setText("😁 좋아요! 참 잘했어요!");
+        else if(count <15)
+            analysis_grade.setText("😅 조금만 더 노력해보아요!");
 
     }
 

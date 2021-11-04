@@ -29,8 +29,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AnalysisDetailActivity extends AppCompatActivity {
     ImageButton analysis_detail_back;
@@ -338,9 +340,23 @@ public class AnalysisDetailActivity extends AppCompatActivity {
             analysis_detail_content.setText("※ filler words");
             analysis_detail_explain_title.setText("filler words 란?");
             analysis_detail_explain.setText("발표 연습 진행중 '음..' '어..' '그..' 등의 빈공간을 채우기 위해 습관적으로 발음을 끄는 부분을 확인할 수 있습니다.");
-            if (fillerWords.isEmpty()) {
+
+            Set<Integer> fillerwordslist = new HashSet<>();
+            for(Integer i : fillerWords.get("음")){
+                fillerwordslist.add(i);
+            }
+            for(Integer i : fillerWords.get("어")){
+                fillerwordslist.add(i);
+            }
+            for(Integer i : fillerWords.get("그")){
+                fillerwordslist.add(i);
+            }
+
+
+            if (fillerwordslist.isEmpty()) {
                 analysis_detail_count.setText("검출 내용이 없습니다");
             }else{
+                analysis_detail_count.setText("filler words 검출 개수 : " + fillerwordslist.size() + "개");
                 TextView item =new TextView(this);
                 item.setText(fillerWords.toString());
                 analysis_detail_itemlist.addView(item);
