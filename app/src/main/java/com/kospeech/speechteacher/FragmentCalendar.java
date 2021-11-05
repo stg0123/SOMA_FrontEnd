@@ -85,7 +85,9 @@ public class FragmentCalendar extends Fragment {
                                     TextView numberText = item.findViewById(R.id.numberText);
                                     TextView dateText = item.findViewById(R.id.dateText);
                                     LinearLayout presentation_item_delete = item.findViewById(R.id.presentation_item_delete);
-
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    params.setMargins(60,50,60,10);
+                                    item.setLayoutParams(params);
                                     titleText.setText(p.getPresntation_title());
                                     numberText.setText(p.getPresentation_result_info()+"회");
                                     dateText.setText("발표일: " + mdate);

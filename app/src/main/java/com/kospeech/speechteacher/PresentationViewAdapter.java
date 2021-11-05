@@ -149,7 +149,7 @@ public class PresentationViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override
                 public void onClick(View view) {
                     androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(view.getContext());
-                    builder.setMessage("발표연습을 삭제하면 복구가 불가능합니다. 정말 삭제하시겟습니까?")
+                    builder.setMessage("발표연습을 삭제하면 복구가 불가능합니다. 정말 삭제하시겠습니까?")
                             .setTitle("발표연습을 삭제하시겠습니까?")
                             .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                 @Override

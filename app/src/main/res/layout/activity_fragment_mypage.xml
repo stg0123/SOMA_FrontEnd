@@ -244,7 +244,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="유효기간: 2021.11.22 ~ 2021.12.22"
+                    android:text="유효기간: 2021.11.18 ~ 2021.12.18"
                     android:textSize="16sp"
                     android:textColorHint="@color/textprimaryinverse"
                     />

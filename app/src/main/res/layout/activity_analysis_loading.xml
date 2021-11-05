@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:text="발표 연습 시간에따라 분석시간이 길어질 수 있습니다."
+        android:text="발표 연습 시간에 따라 분석 시간이 길어질 수 있습니다."
         android:textSize="12dp"
         android:textColor="@color/textprimaryinverse"
         app:layout_constraintLeft_toLeftOf="parent"
