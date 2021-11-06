@@ -23,7 +23,7 @@ public class PresentationMakeScriptActivity extends AppCompatActivity {
     PDFView presentation_make_script_presentation;
     View presentation_make_script_presentation_left,presentation_make_script_presentation_right;
 
-    TextView presentation_make_script_finish;
+    TextView presentation_make_script_finish,presentation_make_script_pagenum;
     EditText presentation_make_script_script;
     private PresentationMakeItem presentationMakeItem;
     private Uri uri;
@@ -40,6 +40,7 @@ public class PresentationMakeScriptActivity extends AppCompatActivity {
         presentation_make_script_presentation =findViewById(R.id.presentation_make_script_presentation);
         presentation_make_script_presentation_left = findViewById(R.id.presentation_make_script_presentation_left);
         presentation_make_script_presentation_right = findViewById(R.id.presentation_make_script_presentation_right);
+        presentation_make_script_pagenum = findViewById(R.id.presentation_make_script_pagenum);
         viewPresentation(uri);
 
 
@@ -88,6 +89,7 @@ public class PresentationMakeScriptActivity extends AppCompatActivity {
                 .onPageChange(new OnPageChangeListener() {
                     @Override
                     public void onPageChanged(int page, int pageCount) {
+                        presentation_make_script_pagenum.setText((page+1)+"/"+pageCount);
                         refreshScript(page);
                     }
                 })

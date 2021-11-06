@@ -85,6 +85,19 @@
                 />
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/presentation_make_keyword_pagenum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:background="@drawable/page_background"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="0/0"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            />
 
 
 

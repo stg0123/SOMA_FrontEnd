@@ -66,7 +66,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
 
     ImageView practice_out,practice_analysis;
     ImageButton practice_record;
-    TextView practice_script_text,practice_change_statetext;
+    TextView practice_script_text,practice_change_statetext,practice_pagenum;
     FlexboxLayout practice_keyword_flexbox;
     LinearLayout practice_layout,practice_keyword_layout,practice_script_layout;
     ConstraintLayout practice_change_layout;
@@ -116,7 +116,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
 
         practice_keyword_flexbox = findViewById(R.id.practice_keyword_flexbox);
         practice_script_text = findViewById(R.id.practice_script_text);
-
+        practice_pagenum = findViewById(R.id.practice_pagenum);
 
         SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
@@ -144,24 +144,6 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure: connection fail");
             }
         });
-
-//        String str[] = {"발표","어플리케이션","개인화","아이스크림","강아지"};
-//        for(int i=0;i<5;i++){
-//            TextView tmp = new TextView(this);
-//            tmp.setText(str[i]);
-//            tmp.setTextColor(getColor(R.color.primary));
-//            tmp.setBackground(getDrawable(R.drawable.round_select_border2));
-//            tmp.setTextSize(16);
-//            tmp.setPadding(10,15,10,15);
-//            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(300,FlexboxLayout.LayoutParams.WRAP_CONTENT);
-//            params.setMargins(10,10,10,10);
-//            tmp.setLayoutParams(params);
-//            tmp.setGravity(Gravity.CENTER);
-//            practice_keyword_flexbox.addView(tmp);
-//        }
-//        practice_script_text.setText("형사피해자는 법률이 정하는 바에 의하여 당해 사건의 재판 절차에서 진술할 수 있다. 대통령은 조국의 평화적 통일을 위한 성실한 의무를 진다. 국무회의는 대통령·국무총리와15인 이상 30인 이하의 국무위원으로 구성한다.\n" +
-//                "국회에 제출된 법률안 기타의 의안은 회기중에 의결되지 못한 이유로 폐기되지 아니한다.");
-
 
 
 
@@ -432,6 +414,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                     .onPageChange(new OnPageChangeListener() {
                         @Override
                         public void onPageChanged(int page, int pageCount) {
+                            practice_pagenum.setText((page+1)+"/"+pageCount);
                             refreshKeyword(page);
                             refreshScript(page);
                         }

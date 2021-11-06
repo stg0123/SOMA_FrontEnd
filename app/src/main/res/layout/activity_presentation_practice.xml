@@ -71,6 +71,20 @@
             app:layout_constraintBottom_toBottomOf="@id/practice_switch"
             />
 
+        <TextView
+            android:id="@+id/practice_pagenum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:background="@drawable/page_background"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="0/0"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView

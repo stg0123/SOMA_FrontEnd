@@ -34,7 +34,7 @@ public class PresentationMakeKeywordActivity extends AppCompatActivity {
     View presentation_make_keyword_presentation_left,presentation_make_keyword_presentation_right;
     ConstraintLayout presentation_make_keyword_add;
 
-    TextView presentation_make_keyword_finish;
+    TextView presentation_make_keyword_finish,presentation_make_keyword_pagenum;
     private PresentationMakeItem presentationMakeItem;
     private Uri uri;
     @Override
@@ -48,6 +48,7 @@ public class PresentationMakeKeywordActivity extends AppCompatActivity {
         presentation_make_keyword_presentation = findViewById(R.id.presentation_make_keyword_presentation);
         presentation_make_keyword_presentation_left = findViewById(R.id.presentation_make_keyword_presentation_left);
         presentation_make_keyword_presentation_right = findViewById(R.id.presentation_make_keyword_presentation_right);
+        presentation_make_keyword_pagenum = findViewById(R.id.presentation_make_keyword_pagenum);
         uri = getIntent().getParcelableExtra("uri");
         viewPresentation(uri);
 
@@ -170,6 +171,8 @@ public class PresentationMakeKeywordActivity extends AppCompatActivity {
                 .onPageChange(new OnPageChangeListener() {
                     @Override
                     public void onPageChanged(int page, int pageCount) {
+                        presentation_make_keyword_pagenum.setText((page+1)+"/"+pageCount);
+
                         refreshKeyword(page);
                     }
                 })

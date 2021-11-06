@@ -118,6 +118,7 @@ public class PresentationResultListActivity extends AppCompatActivity {
                 intent.putExtra("presentationItem",presentationItem);
                 intent.putExtra("resultlistsize",resultlistsize);
                 startActivity(intent);
+                finish();
             }
         });
 
