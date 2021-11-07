@@ -29,3 +29,8 @@
 
 ### ️발표 진행 및 결과 페이지
 ![image](/resource/front-end3.png)
+
+### 앱 썸네일
+![image](/resource/slide1.png) ![image](/resource/slide2.png) <br>
+![image](/resource/slide3.png) ![image](/resource/slide4.png) ![image](/resource/slide5.png) <br>
+![image](/resource/slide6.png) ![image](/resource/slide7.png) ![image](/resource/slide8.png) <br>
