@@ -21,7 +21,11 @@
 
 ## 👀화면 설계 및 소개
 
-### 스플레쉬 및 메인 페이지 (fragment)
+### 스플레쉬 , 로그인 및 메인 페이지
+![image](/resource/front-end1.png)
+
+### 일정, 노하우, 마이 페이지
+![image](/resource/front-end2.png)
 
 ### ️발표 진행 및 결과 페이지
-![image](/resource/front_end1.png)
+![image](/resource/front-end3.png)
