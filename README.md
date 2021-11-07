@@ -32,5 +32,5 @@
 
 ### 앱 썸네일
 <img src="/resource/slide1.png" width="300px"> <img src="/resource/slide2.png" width="300px"> <br>
-<img src="/resource/slide3.png" width="300px"> <img src="/resource/slide4.png" width="300px"> <img src="/resource/slide5.png" width="300px"> <br>
-<img src="/resource/slide6.png" width="300px"> <img src="/resource/slide7.png" width="300px"> <img src="/resource/slide8.png" width="300px"> <br>
+<img src="/resource/slide3.png" width="250px"> <img src="/resource/slide4.png" width="250px"> <img src="/resource/slide5.png" width="250px"> <br>
+<img src="/resource/slide6.png" width="250px"> <img src="/resource/slide7.png" width="250px"> <img src="/resource/slide8.png" width="250px"> <br>
