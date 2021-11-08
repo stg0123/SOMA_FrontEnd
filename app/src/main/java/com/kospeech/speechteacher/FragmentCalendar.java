@@ -76,7 +76,7 @@ public class FragmentCalendar extends Fragment {
                             for(PresentationItem p : presentationItems){
                                 String mdate = p.getPresentation_date();
                                 int year = Integer.parseInt(mdate.substring(0,4));
-                                int month = Integer.parseInt(mdate.substring(5,7));
+                                int month = Integer.parseInt(mdate.substring(5,7))-1;
                                 int day = Integer.parseInt(mdate.substring(8,10));
                                 if(date.equals(CalendarDay.from(year,month,day))){
                                     View item = inflater.inflate(R.layout.presentation_item, null);
@@ -190,7 +190,7 @@ public class FragmentCalendar extends Fragment {
             for(PresentationItem p : items) {
                 String date = p.getPresentation_date();
                 int year = Integer.parseInt(date.substring(0,4));
-                int month = Integer.parseInt(date.substring(5,7));
+                int month = Integer.parseInt(date.substring(5,7))-1;
                 int day = Integer.parseInt(date.substring(8,10));
                 dates.add(CalendarDay.from(year,month,day));
             }

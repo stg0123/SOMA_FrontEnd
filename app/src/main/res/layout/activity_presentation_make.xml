@@ -92,7 +92,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:padding="10dp"
         android:hint="발표 제목을 입력하세요"
-        android:maxLength="15"
+        android:maxLength="30"
         android:singleLine="true"
         android:textStyle="bold"
         android:textColor="@color/textprimary"

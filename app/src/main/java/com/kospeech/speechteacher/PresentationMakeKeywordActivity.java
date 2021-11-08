@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -71,7 +72,8 @@ public class PresentationMakeKeywordActivity extends AppCompatActivity {
                 editText.setHintTextColor(getColor(R.color.textprimaryinverse));
                 editText.setTextColor(getColor(R.color.textprimary));
                 editText.setSingleLine(true);
-                editText.setTextSize(24);
+                editText.setTextSize(20);
+                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setView(editText)
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
