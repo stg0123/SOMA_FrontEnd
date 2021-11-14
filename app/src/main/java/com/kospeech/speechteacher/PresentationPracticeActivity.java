@@ -126,7 +126,8 @@ public class PresentationPracticeActivity extends AppCompatActivity {
             public void onResponse(Call<PresentationItem> call, Response<PresentationItem> response) {
                 if(response.isSuccessful() && response.body()!=null) {
                     presentation = response.body();
-                    new RetrivePDFfromUrl().execute(presentation.getPresentation_file_url());
+                    if(presentation.getPresentation_file_url()!=null)
+                        new RetrivePDFfromUrl().execute(presentation.getPresentation_file_url());
                 }
                 else{
                     try {
@@ -478,9 +479,6 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                                             e.printStackTrace();
                                         }
                                     }
-
-
-
                                 }
 
                                 @Override
