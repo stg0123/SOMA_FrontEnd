@@ -236,7 +236,7 @@ public class PresentationMakeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(presentation_make_title_text.getText().toString().equals("") || presentationMakeItem.time==null || presentationMakeItem.date == null){
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    builder.setMessage("발표제목, 발표시간, 발표일은 필수 설정입니다")
+                    builder.setMessage("발표제목, 타이머, 발표일은 필수 설정입니다")
                             .setTitle("설정을 완료해주세요!")
                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                 @Override

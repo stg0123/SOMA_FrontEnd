@@ -393,6 +393,7 @@ public class AnalysisDetailActivity extends AppCompatActivity {
                     });
                     item.setPadding(0, 30, 0, 30);
                     analysis_detail_itemlist.addView(item);
+                    i++;
                 }
             }
         }

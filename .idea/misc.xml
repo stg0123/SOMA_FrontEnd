@@ -19,6 +19,8 @@
         <entry key="app/src/main/res/drawable/detail_bar5.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_alert.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/ic_analysis.xml" value="0.25092592592592594" />
+        <entry key="app/src/main/res/drawable/ic_analysis_ok.xml" value="0.25092592592592594" />
         <entry key="app/src/main/res/drawable/ic_change.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_chevron_left.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_chevron_right.xml" value="0.4197916666666667" />
@@ -27,10 +29,11 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_mic.xml" value="0.24635416666666668" />
         <entry key="app/src/main/res/drawable/ic_mic_on.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/ic_out.xml" value="0.2537037037037037" />
         <entry key="app/src/main/res/drawable/ic_pause.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_pause_ic.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_star.xml" value="0.4197916666666667" />
-        <entry key="app/src/main/res/drawable/ic_start.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/ic_start.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/ic_start_ic.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/ic_time.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/logo_foreground.xml" value="0.246875" />
@@ -80,7 +83,7 @@
         <entry key="app/src/main/res/layout/activity_presentation_make_keyword.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_presentation_make_script.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_presentation_make_time.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/activity_presentation_practice.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_presentation_practice.xml" value="0.2101851851851852" />
         <entry key="app/src/main/res/layout/activity_presentation_result_list.xml" value="0.38958333333333334" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/analysis_detail_item1.xml" value="0.4036458333333333" />

@@ -79,7 +79,7 @@ public class JoinActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<JoinData> call, Throwable t) {
-                            Log.d(TAG, "onFailure: connection fail");
+                            Toast.makeText(view.getContext(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
                         }
                     });
 

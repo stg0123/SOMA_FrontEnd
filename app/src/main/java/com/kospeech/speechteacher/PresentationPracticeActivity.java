@@ -237,6 +237,7 @@ public class PresentationPracticeActivity extends AppCompatActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                            practice_analysis.setImageDrawable(getDrawable(R.drawable.ic_analysis_ok));
                         }
                         else
                             mediaRecorder.resume();
