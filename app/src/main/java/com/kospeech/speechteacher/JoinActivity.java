@@ -48,14 +48,14 @@ public class JoinActivity extends AppCompatActivity {
                 if(join_id.getText().toString().replace(" ","").equals("")){
                     Toast.makeText(view.getContext(), "아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
-                else if(!join_pw.getText().toString().equals(join_pw2.getText().toString()) || join_pw.getText().toString().replace(" ","").equals("") ) {
+                else if(!join_pw.getText().toString().equals(join_pw2.getText().toString()) || join_pw.getText().toString().replace(" ","").equals("") || join_pw.getText().toString().length()<6) {
                     Toast.makeText(view.getContext(), "비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
                 }
                 else if(join_nickname.getText().toString().replace(" ","").equals("")){
                     Toast.makeText(view.getContext(), "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    retrofitService.join(join_id.getText().toString()
+                    retrofitService.join(join_id.getText().toString().replace(" ","")
                             ,join_pw.getText().toString()
                             , join_nickname.getText().toString())
                     .enqueue(new Callback<JoinData>() {
