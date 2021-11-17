@@ -48,6 +48,10 @@ public class FragmentKnowhow extends Fragment {
                         View item = inflater.inflate(R.layout.knowhow_item, null);
                         TextView knowhow_title = item.findViewById(R.id.knowhow_title);
                         knowhow_title.setText(knowhow.getKnowhow_title());
+
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(0,0,0,50);
+                        item.setLayoutParams(params);
                         item.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
