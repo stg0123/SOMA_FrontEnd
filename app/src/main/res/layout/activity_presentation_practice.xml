@@ -88,6 +88,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
+        android:id="@+id/practice_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="none"
@@ -218,9 +219,11 @@
                     android:textColor="@color/textprimary"
                     />
                 <ScrollView
+                    android:id="@+id/practice_script_scroll"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:background="@drawable/round_border_primary"
+                    android:scrollbars="none"
                     >
                     <TextView
                         android:id="@+id/practice_script_text"

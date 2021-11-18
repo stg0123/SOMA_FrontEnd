@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,11 +23,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,6 +73,8 @@ public class PresentationPracticeActivity extends AppCompatActivity {
     FlexboxLayout practice_keyword_flexbox;
     LinearLayout practice_layout,practice_keyword_layout,practice_script_layout;
     ConstraintLayout practice_change_layout;
+    ScrollView practice_script_scroll,practice_scroll;
+
     private int change =0;
 
     private boolean isRecording = false;
@@ -117,6 +122,17 @@ public class PresentationPracticeActivity extends AppCompatActivity {
         practice_keyword_flexbox = findViewById(R.id.practice_keyword_flexbox);
         practice_script_text = findViewById(R.id.practice_script_text);
         practice_pagenum = findViewById(R.id.practice_pagenum);
+
+        practice_scroll = findViewById(R.id.practice_scroll);
+        practice_script_scroll =findViewById(R.id.practice_script_scroll);
+        practice_script_scroll.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                practice_scroll.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         retrofitService = RetrofitClient.getClient(sharedPreferences.getString("login_token","")).create(RetrofitService.class);
